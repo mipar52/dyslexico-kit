@@ -21,7 +21,7 @@ public enum DyslexicoFontResolver {
         }
     }
     
-    public static func font(from settings: DyslexicoFontSettings) -> UIFont {
+    public static func uiFont(from settings: DyslexicoFontSettings) -> UIFont {
         switch settings.font {
         case .openDyslexic:
             return .openDyslexic(type: settings.type, size: settings.size)
