@@ -6,10 +6,28 @@
 //
 
 import Foundation
+import SwiftUI
 
-enum DyslexicoLetterHighlightOptions {
-    case dbPair
+enum DyslexicoLetterHighlightOption: Hashable {
+    case bdPair
     case pqPair
     case mwPair
     case customPair(Character, Character)
+    
+    var pairColor: (Color, Color) {
+        switch self {
+        case .bdPair:
+            return (DyslexicoColors.highlightB, DyslexicoColors.highlightD)
+        case .pqPair:
+            return (DyslexicoColors.highlightP, DyslexicoColors.highlightQ)
+        case .mwPair:
+            return (DyslexicoColors.highlightM, DyslexicoColors.highlightW)
+        default:
+            return (.clear, .clear)
+        }
+    }
+    
+    func makePair(for letter: Character, and letterTwo: Character) ->  DyslexicoLetterHighlightOption {
+        return .customPair(letter, letterTwo)
+    }
 }
