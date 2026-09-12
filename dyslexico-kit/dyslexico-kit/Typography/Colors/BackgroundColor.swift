@@ -36,4 +36,12 @@ enum BackgroundColor {
             return UIColor(DyslexicoColors.darkBackgroundColor)
         }
     }
+    
+    func customColor(for color: Color) -> Color {
+        return color
+    }
+    
+    func customUiColor(for color: UIColor) -> UIColor {
+        return color
+    }
 }
