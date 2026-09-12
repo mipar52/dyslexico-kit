@@ -13,6 +13,19 @@ enum DyslexicoFontOptions {
     case lexend
     case systemDefault
     
+    var fontName: String {
+        switch self {
+        case .openDyslexic:
+            return "OpenDyslexic"
+        case .atkinsonHyperlegible:
+            return "AtkinsonHyperlegible"
+        case .lexend:
+            return "Lexend"
+        default:
+            return "System"
+        }
+    }
+    
     func font(type: DyslexicoFontOptions, size: CGFloat = 14) -> Font {
         switch self {
         case .openDyslexic:
