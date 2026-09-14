@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum DyslexicoLetterHighlightOption: Hashable {
+public enum DyslexicoLetterHighlightOption: Hashable {
     case bdPair
     case pqPair
     case mwPair

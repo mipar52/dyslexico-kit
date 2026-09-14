@@ -7,9 +7,9 @@
 
 import Foundation
 
-struct DyslexicoSpacingSettings: Codable {
-    let lineSpacing: CGFloat
-    let letterSpacing: CGFloat
+public struct DyslexicoSpacingSettings: Codable {
+    public let lineSpacing: CGFloat
+    public let letterSpacing: CGFloat
     
     static let defaultSpacing: DyslexicoSpacingSettings = .init(lineSpacing: 1.5, letterSpacing: 0.05)
 }
