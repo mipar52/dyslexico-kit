@@ -22,15 +22,25 @@ public struct DyslexicoTypographySettings {
     public let colorSettings: DyslexicoColorSettings
     public let spacingSettings: DyslexicoSpacingSettings
     public let isItalic: Bool
+
+    public init(
+        fontSettings: DyslexicoFontSettings,
+        fontHighlightOptions: Set<DyslexicoLetterHighlightOption>,
+        colorSettings: DyslexicoColorSettings,
+        spacingSettings: DyslexicoSpacingSettings,
+        isItalic: Bool = false
+    ) {
+        self.fontSettings = fontSettings
+        self.fontHighlightOptions = fontHighlightOptions
+        self.colorSettings = colorSettings
+        self.spacingSettings = spacingSettings
+        self.isItalic = isItalic
+    }
 }
 
 extension DyslexicoTypographySettings {
     public func fontSettings(for role: DyslexicoTextRole) -> DyslexicoFontSettings {
-        DyslexicoFontSettings(
-            family: fontSettings.family,
-            weight: fontSettings.weight,
-            size: max(10, fontSettings.size + role.sizeOffset)
-        )
+        fontSettings(for: .init(role: role))
     }
     
     public func font(for role: DyslexicoTextRole) -> Font {
@@ -44,8 +54,25 @@ extension DyslexicoTypographySettings {
     public func fontSettings(for textSettings: DyslexicoTextSettings) -> DyslexicoFontSettings {
         DyslexicoFontSettings(
             family: fontSettings.family,
-            weight: fontSettings.weight ?? textSettings.role.defaultWeight,
-            size: max(10, fontSettings.size + textSettings.role.sizeOffset)
+            weight: textSettings.weightOverride ?? fontSettings.weight ?? textSettings.role.defaultWeight,
+            size: max(10, fontSettings.size + textSettings.role.sizeOffset),
+            isItalic: isItalic || textSettings.isItalic
         )
+    }
+
+    public func font(for textSettings: DyslexicoTextSettings) -> Font {
+        DyslexicoFontResolver.font(from: fontSettings(for: textSettings))
+    }
+
+    public func uiFont(for textSettings: DyslexicoTextSettings) -> UIFont {
+        DyslexicoFontResolver.uiFont(from: fontSettings(for: textSettings))
+    }
+
+    public func color(for textSettings: DyslexicoTextSettings) -> Color {
+        (textSettings.colorOverride ?? colorSettings.fontColor).color
+    }
+
+    public func uiColor(for textSettings: DyslexicoTextSettings) -> UIColor {
+        (textSettings.colorOverride ?? colorSettings.fontColor).uiColor
     }
 }
