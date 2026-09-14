@@ -72,7 +72,7 @@ public struct DyslexicoTextField: View {
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let title {
-                DyslexicoTextView(title, textSettings: titleTextSettings)
+                DyslexicoText(title, textSettings: titleTextSettings)
             }
 
             HStack(spacing: 10) {
@@ -120,19 +120,10 @@ public struct DyslexicoTextField: View {
                     .accessibilityHint(Text("Clears the text."))
                 }
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 12)
-            .background(
-                RoundedRectangle(cornerRadius: 14)
-                    .fill(DyslexicoColors.backgroundElevated)
-            )
-            .overlay {
-                RoundedRectangle(cornerRadius: 14)
-                    .stroke(borderColor, lineWidth: 1)
-            }
+            .dyslexicoInputChrome(isFocused: isFocused, hasError: error != nil)
 
             if let error {
-                DyslexicoTextView(error, textSettings: errorTextSettings)
+                DyslexicoText(error, textSettings: errorTextSettings)
             }
         }
         .animation(.easeOut(duration: 0.15), value: isFocused)
@@ -158,17 +149,6 @@ public struct DyslexicoTextField: View {
             .foregroundColor(DyslexicoColors.textTertiary)
     }
 
-    private var borderColor: Color {
-        if error != nil {
-            return DyslexicoColors.semanticError
-        }
-
-        if isFocused {
-            return DyslexicoColors.accentPrimary.opacity(0.55)
-        }
-
-        return DyslexicoColors.borderStrong.opacity(0.35)
-    }
 }
 
 private struct DyslexicoTextFieldPreview: View {
@@ -190,8 +170,4 @@ private struct DyslexicoTextFieldPreviews: PreviewProvider {
     static var previews: some View {
         DyslexicoTextFieldPreview()
     }
-}
-
-#Preview {
-    DyslexicoTextFieldPreviews.previews
 }

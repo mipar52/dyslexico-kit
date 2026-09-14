@@ -7,7 +7,9 @@
 
 import SwiftUI
 
-public struct DyslexicoTextView: View {
+public typealias DyslexicoTextView = DyslexicoText
+
+public struct DyslexicoText: View {
     @Environment(\.dyslexicoTypography) private var typography
 
     private let text: Text
@@ -53,17 +55,13 @@ public struct DyslexicoTextView: View {
     }
 }
 
-private struct DyslexicoTextViewPreviews: PreviewProvider {
+private struct DyslexicoTextPreviews: PreviewProvider {
     static var previews: some View {
-        DyslexicoTextView(
+        DyslexicoText(
             "Sample text",
             textSettings: DyslexicoTextSettings(role: .body),
             layout: .singleLine,
             alignment: .center
         )
     }
-}
-
-#Preview {
-    DyslexicoTextViewPreviews.previews
 }
