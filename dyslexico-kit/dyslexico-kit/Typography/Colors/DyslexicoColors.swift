@@ -23,6 +23,14 @@ struct DyslexicoColors {
     static let navyTextColor: Color = Color(red: 0.15, green: 0.21, blue: 0.27)
     static let charcoalTextColor: Color = Color(red: 0.23, green: 0.23, blue: 0.23)
 
+    // MARK: UI colors
+    static let accentPrimary: Color = Color(red: 0.20, green: 0.35, blue: 0.62)
+    static let textSecondary: Color = Color(red: 0.38, green: 0.42, blue: 0.46)
+    static let textTertiary: Color = Color(red: 0.58, green: 0.61, blue: 0.65)
+    static let backgroundElevated: Color = Color(red: 0.99, green: 0.98, blue: 0.96)
+    static let borderStrong: Color = Color(red: 0.54, green: 0.58, blue: 0.62)
+    static let semanticError: Color = Color(red: 0.72, green: 0.16, blue: 0.16)
+
 
     // MARK: Text highlighters
     static let highlightB: Color = Color(red: 0.96, green: 0.83, blue: 0.65)
