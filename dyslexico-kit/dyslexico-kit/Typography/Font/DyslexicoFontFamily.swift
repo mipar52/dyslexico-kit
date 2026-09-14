@@ -12,7 +12,7 @@ public enum DyslexicoFontFamily {
     case atkinsonHyperlegible
     case lexend
     case systemDefault
-    case custom(name: String, type: String)
+    case custom(name: String, weight: String)
     
     var fontName: String {
         switch self {

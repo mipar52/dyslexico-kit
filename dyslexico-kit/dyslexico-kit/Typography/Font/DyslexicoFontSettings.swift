@@ -9,10 +9,24 @@ import Foundation
 import SwiftUI
 
 public struct DyslexicoFontSettings {
-    static let defaultFont: DyslexicoFontSettings = .init(family: .lexend, weight: .medium, size: 24)
+    public static let defaultFont: DyslexicoFontSettings = .init(family: .lexend, size: 24)
+
     public let family: DyslexicoFontFamily
     public let weight: DyslexicoFontWeight?
     public let size: CGFloat
+    public let isItalic: Bool
+
+    public init(
+        family: DyslexicoFontFamily,
+        weight: DyslexicoFontWeight? = nil,
+        size: CGFloat,
+        isItalic: Bool = false
+    ) {
+        self.family = family
+        self.weight = weight
+        self.size = size
+        self.isItalic = isItalic
+    }
 }
 
 extension DyslexicoFontSettings {
