@@ -1,7 +1,15 @@
-<h1>
+<div align="center">
   <img width="72" height="72" alt="DyslexicoKit logo" src="https://github.com/user-attachments/assets/b6acc3b2-f6d6-40ca-9e7c-7f7245f2ad55" />
-  DyslexicoKit
-</h1>
+  <h1>DyslexicoKit</h1>
+</div>
+
+## Table of Contents
+
+- [Typography Settings](#typography-settings)
+- [SwiftUI Integration](#swiftui-integration)
+- [Text Views](#text-views)
+- [Text Fields](#text-fields)
+- [View Modifiers](#view-modifiers)
 
 ## Typography Settings
 
