@@ -8,27 +8,27 @@
 import Foundation
 import SwiftUI
 
-struct DyslexicoTypographySettings {
+public struct DyslexicoTypographySettings {
     
-    static let defaultSettings: DyslexicoTypographySettings = .init(
+    public static let defaultSettings: DyslexicoTypographySettings = .init(
         fontSettings: .defaultFont,
         fontHighlightOptions: [.bdPair, .pqPair],
         colorSettings: .defaultSettings,
         spacingSettings: .defaultSpacing,
         isItalic: false)
     
-    let fontSettings: DyslexicoFontSettings
-    let fontHighlightOptions: Set<DyslexicoLetterHighlightOption>
-    let colorSettings: DyslexicoColorSettings
-    let spacingSettings: DyslexicoSpacingSettings
-    let isItalic: Bool
+    public let fontSettings: DyslexicoFontSettings
+    public let fontHighlightOptions: Set<DyslexicoLetterHighlightOption>
+    public let colorSettings: DyslexicoColorSettings
+    public let spacingSettings: DyslexicoSpacingSettings
+    public let isItalic: Bool
 }
 
 extension DyslexicoTypographySettings {
     public func fontSettings(for role: DyslexicoTextRole) -> DyslexicoFontSettings {
         DyslexicoFontSettings(
-            font: fontSettings.font,
-            type: fontSettings.type,
+            family: fontSettings.family,
+            weight: fontSettings.weight,
             size: max(10, fontSettings.size + role.sizeOffset)
         )
     }
@@ -39,5 +39,13 @@ extension DyslexicoTypographySettings {
     
     public func uiFont(for role: DyslexicoTextRole) -> UIFont {
         DyslexicoFontResolver.uiFont(from: fontSettings(for: role))
+    }
+    
+    public func fontSettings(for textSettings: DyslexicoTextSettings) -> DyslexicoFontSettings {
+        DyslexicoFontSettings(
+            family: fontSettings.family,
+            weight: fontSettings.weight ?? textSettings.role.defaultWeight,
+            size: max(10, fontSettings.size + textSettings.role.sizeOffset)
+        )
     }
 }
