@@ -7,10 +7,19 @@
 
 import SwiftUI
 
-//extension EnvironmentValues {
-//    var dyslexicoTypography: DyslexicoTypographySettings
-//}
-//
-//extension View {
-//    public func dyslexicoTypography(_ settings: DyslexicoTypographySettings) -> some View
-//}
+private struct DyslexicoTypographyKey: EnvironmentKey {
+    static let defaultValue: DyslexicoTypographySettings = .defaultSettings
+}
+
+public extension EnvironmentValues {
+    var dyslexicoTypography: DyslexicoTypographySettings {
+        get { self[DyslexicoTypographyKey.self] }
+        set { self[DyslexicoTypographyKey.self] = newValue }
+    }
+}
+
+public extension View {
+    func dyslexicoTypography(_ settings: DyslexicoTypographySettings) -> some View {
+        environment(\.dyslexicoTypography, settings)
+    }
+}
