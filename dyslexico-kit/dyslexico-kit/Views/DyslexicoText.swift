@@ -1,13 +1,11 @@
 //
-//  DyslexicoTextView.swift
+//  DyslexicoText.swift
 //  dyslexico-kit
 //
 //  Created by Milan Parađina on 08.09.2026..
 //
 
 import SwiftUI
-
-public typealias DyslexicoTextView = DyslexicoText
 
 public struct DyslexicoText: View {
     @Environment(\.dyslexicoTypography) private var typography
@@ -64,4 +62,8 @@ private struct DyslexicoTextPreviews: PreviewProvider {
             alignment: .center
         )
     }
+}
+
+#Preview {
+    DyslexicoTextPreviews.previews
 }

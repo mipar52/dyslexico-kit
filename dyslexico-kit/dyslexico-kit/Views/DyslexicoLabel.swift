@@ -44,3 +44,7 @@ private struct DyslexicoLabelPreviews: PreviewProvider {
             .padding()
     }
 }
+
+#Preview {
+    DyslexicoLabelPreviews.previews
+}

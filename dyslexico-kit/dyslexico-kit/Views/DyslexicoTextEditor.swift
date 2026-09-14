@@ -68,6 +68,7 @@ public struct DyslexicoTextEditor: View {
                     .font(typography.font(for: inputTextSettings))
                     .foregroundStyle(typography.color(for: inputTextSettings))
                     .tracking(typography.spacingSettings.letterSpacing)
+                    .kerning(typography.spacingSettings.letterSpacing)
                     .lineSpacing(typography.spacingSettings.lineSpacing)
                     .scrollContentBackground(.hidden)
                     .frame(minHeight: minHeight)
@@ -102,4 +103,8 @@ private struct DyslexicoTextEditorPreviews: PreviewProvider {
     static var previews: some View {
         DyslexicoTextEditorPreview()
     }
+}
+
+#Preview {
+    DyslexicoTextEditorPreviews.previews
 }

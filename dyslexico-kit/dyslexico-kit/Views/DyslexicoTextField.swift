@@ -171,3 +171,7 @@ private struct DyslexicoTextFieldPreviews: PreviewProvider {
         DyslexicoTextFieldPreview()
     }
 }
+
+#Preview {
+    DyslexicoTextFieldPreviews.previews
+}

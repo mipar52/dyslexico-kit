@@ -100,3 +100,7 @@ private struct DyslexicoButtonPreviews: PreviewProvider {
         .padding()
     }
 }
+
+#Preview {
+    DyslexicoButtonPreviews.previews
+}
