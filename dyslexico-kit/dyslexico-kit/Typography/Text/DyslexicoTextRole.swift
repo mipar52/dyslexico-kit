@@ -14,7 +14,7 @@ public enum DyslexicoTextRole {
     case input
     case button
 
-    var sizeOffset: CGFloat {
+    public var sizeOffset: CGFloat {
         switch self {
         case .title:
             return 8
@@ -29,7 +29,7 @@ public enum DyslexicoTextRole {
         }
     }
     
-    var defaultWeight: DyslexicoFontWeight {
+    public var defaultWeight: DyslexicoFontWeight {
         switch self {
         case .title:
             return .bold

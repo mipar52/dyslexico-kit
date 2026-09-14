@@ -11,7 +11,19 @@ public struct DyslexicoTextSettings {
     public var role: DyslexicoTextRole
     public var weightOverride: DyslexicoFontWeight?
     public var colorOverride: LetterColor?
-    public var isItalic: Bool = false
+    public var isItalic: Bool
+
+    public init(
+        role: DyslexicoTextRole,
+        weightOverride: DyslexicoFontWeight? = nil,
+        colorOverride: LetterColor? = nil,
+        isItalic: Bool = false
+    ) {
+        self.role = role
+        self.weightOverride = weightOverride
+        self.colorOverride = colorOverride
+        self.isItalic = isItalic
+    }
     
     public static let body = DyslexicoTextSettings(role: .body)
     public static let title = DyslexicoTextSettings(role: .title)
