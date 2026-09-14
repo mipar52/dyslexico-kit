@@ -11,7 +11,7 @@ import SwiftUI
 public enum LetterColor {
     case black, brown, navy, charcoal
 
-    var color: Color {
+    public var color: Color {
         switch self {
         case .black:
             return DyslexicoColors.blackTextColor
@@ -24,7 +24,7 @@ public enum LetterColor {
         }
     }
     
-    var uiColor: UIColor {
+    public var uiColor: UIColor {
         switch self {
         case .black:
             return UIColor(DyslexicoColors.blackTextColor)
@@ -37,11 +37,11 @@ public enum LetterColor {
         }
     }
     
-    func customColor(for color: Color) -> Color {
+    public func customColor(for color: Color) -> Color {
         return color
     }
     
-    func customUiColor(for color: UIColor) -> UIColor {
+    public func customUiColor(for color: UIColor) -> UIColor {
         return color
     }
 }

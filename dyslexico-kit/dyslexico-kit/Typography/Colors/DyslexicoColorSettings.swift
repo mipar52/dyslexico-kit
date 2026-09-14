@@ -9,5 +9,10 @@ public struct DyslexicoColorSettings {
     public let fontColor: LetterColor
     public let backgroundColor: BackgroundColor
     
-    static let defaultSettings: DyslexicoColorSettings = .init(fontColor: .black, backgroundColor: .cream)
+    public static let defaultSettings: DyslexicoColorSettings = .init(fontColor: .black, backgroundColor: .cream)
+
+    public init(fontColor: LetterColor, backgroundColor: BackgroundColor) {
+        self.fontColor = fontColor
+        self.backgroundColor = backgroundColor
+    }
 }
