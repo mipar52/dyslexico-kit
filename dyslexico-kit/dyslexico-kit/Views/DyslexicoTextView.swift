@@ -8,18 +8,13 @@
 import SwiftUI
 
 struct DyslexicoTextView: View {
-    //@Query private var preferencesList: [UserTypographyPreferences]
     
     let text: LocalizedStringResource
-    var role: TextRole
-    var type: FontTypeOption?
+    var role: DyslexicoTextRole
+    var type: DyslexicoFontWeight?
     var foregroundStyle: Color?
     var layout: DyslexicoTextLayout = .wrap(lines: nil)
     var alignment: TextAlignment = .leading
-    
-    private var prefs: UserTypographyPreferences {
-        preferencesList.first ?? UserTypographyPreferences()
-    }
     
     var body: some View {
         Text(text)
@@ -82,5 +77,5 @@ private extension View {
 }
 
 #Preview {
-    DyslexicoTextView()
+    DyslexicoTextView(text: <#LocalizedStringResource#>, role: <#DyslexicoTextRole#>)
 }

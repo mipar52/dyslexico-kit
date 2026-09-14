@@ -8,7 +8,6 @@
 import SwiftUI
 
 struct DyslexicoTextField: View {
-    @Query private var preferencesList: [UserTypographyPreferences]
 
     let title: LocalizedStringResource?
     let placeholder: LocalizedStringResource
@@ -28,9 +27,6 @@ struct DyslexicoTextField: View {
     @FocusState private var isFocused: Bool
     @State private var isPasswordVisible = false
 
-    private var prefs: UserTypographyPreferences {
-        preferencesList.first ?? UserTypographyPreferences()
-    }
 
     init(
         title: LocalizedStringResource? = nil,
