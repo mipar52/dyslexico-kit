@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-enum LetterColor {
+public enum LetterColor {
     case black, brown, navy, charcoal
 
     var color: Color {

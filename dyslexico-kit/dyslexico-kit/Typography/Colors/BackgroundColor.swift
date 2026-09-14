@@ -8,10 +8,10 @@
 import Foundation
 import SwiftUI
 
-enum BackgroundColor {
+public enum BackgroundColor {
     case cream, sepia, pastel, dark
     
-    var color: Color {
+    public var color: Color {
         switch self {
         case .cream:
             return DyslexicoColors.creamBackgroundColor
@@ -24,7 +24,7 @@ enum BackgroundColor {
         }
     }
     
-    var uiColor: UIColor {
+    public var uiColor: UIColor {
         switch self {
         case .cream:
             return UIColor(DyslexicoColors.creamBackgroundColor)
@@ -37,11 +37,11 @@ enum BackgroundColor {
         }
     }
     
-    func customColor(for color: Color) -> Color {
+    public func customColor(for color: Color) -> Color {
         return color
     }
     
-    func customUiColor(for color: UIColor) -> UIColor {
+    public func customUiColor(for color: UIColor) -> UIColor {
         return color
     }
 }
