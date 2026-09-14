@@ -9,6 +9,8 @@
 - [SwiftUI Integration](#swiftui-integration)
 - [Text Views](#text-views)
 - [Text Fields](#text-fields)
+- [Text Editors](#text-editors)
+- [Buttons and Labels](#buttons-and-labels)
 - [View Modifiers](#view-modifiers)
 
 ## Typography Settings
@@ -76,12 +78,12 @@ All DyslexicoKit views and text modifiers below that point will read the same se
 
 ## Text Views
 
-Use `DyslexicoTextView` when you want text that automatically follows the active DyslexicoKit typography settings:
+Use `DyslexicoText` when you want text that automatically follows the active DyslexicoKit typography settings:
 
 ```swift
-DyslexicoTextView("Welcome", textSettings: .title)
+DyslexicoText("Welcome", textSettings: .title)
 
-DyslexicoTextView(
+DyslexicoText(
     "Readable body text",
     textSettings: .body,
     layout: .wrap(lines: nil)
@@ -91,12 +93,14 @@ DyslexicoTextView(
 For localized strings:
 
 ```swift
-DyslexicoTextView(
+DyslexicoText(
     "settings_title",
     textSettings: .title,
     alignment: .center
 )
 ```
+
+`DyslexicoTextView` remains available as a compatibility alias for `DyslexicoText`.
 
 ## Text Fields
 
@@ -144,6 +148,58 @@ DyslexicoTextField(
 )
 ```
 
+## Text Editors
+
+Use `DyslexicoTextEditor` for multiline editable text:
+
+```swift
+@State private var notes = ""
+
+DyslexicoTextEditor(
+    title: "Notes",
+    placeholder: "Write something readable...",
+    minHeight: 140,
+    text: $notes
+)
+```
+
+Like `DyslexicoTextField`, the editor supports independent title, input, and error text settings:
+
+```swift
+DyslexicoTextEditor(
+    title: "Notes",
+    placeholder: "Write something readable...",
+    error: "Notes cannot be empty",
+    titleTextSettings: .caption,
+    inputTextSettings: .body,
+    errorTextSettings: .init(role: .caption, colorOverride: .error),
+    text: $notes
+)
+```
+
+## Buttons and Labels
+
+Use `DyslexicoButton` for actions that follow the `.button` typography role:
+
+```swift
+DyslexicoButton("Continue", systemImage: "arrow.right") {
+    submit()
+}
+```
+
+Button variants are available for common UI states:
+
+```swift
+DyslexicoButton("Cancel", variant: .secondary) {}
+DyslexicoButton("Delete", variant: .destructive) {}
+```
+
+Use `DyslexicoLabel` for icon and text rows:
+
+```swift
+DyslexicoLabel("Reading mode", systemImage: "textformat")
+```
+
 ## View Modifiers
 
 If you do not want to use DyslexicoKit views, apply the typography system to your own SwiftUI views:
@@ -161,4 +217,22 @@ For one-off styling with a specific settings object:
 ```swift
 Text("Preview text")
     .dyslexicoText(.body, typography: previewTypographySettings)
+```
+
+You can also reuse the SDK input chrome and readable background:
+
+```swift
+Text("Native view")
+    .dyslexicoReadableBackground()
+
+TextField("Email", text: $email)
+    .dyslexicoInputChrome(isFocused: isFocused, hasError: hasError)
+```
+
+Text layout helpers are available separately:
+
+```swift
+Text("Long readable paragraph")
+    .dyslexicoText(role: .body)
+    .dyslexicoTextLayout(.wrap(lines: nil))
 ```
