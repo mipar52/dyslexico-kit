@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="72" height="72" alt="DyslexicoKit logo" src="https://github.com/user-attachments/assets/b6acc3b2-f6d6-40ca-9e7c-7f7245f2ad55" />
+  <img width="200" height="200" alt="DyslexicoKit logo" src="https://github.com/user-attachments/assets/b6acc3b2-f6d6-40ca-9e7c-7f7245f2ad55" />
   <h1>DyslexicoKit</h1>
 </div>
 
