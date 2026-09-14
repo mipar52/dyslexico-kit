@@ -11,5 +11,10 @@ public struct DyslexicoSpacingSettings: Codable {
     public let lineSpacing: CGFloat
     public let letterSpacing: CGFloat
     
-    static let defaultSpacing: DyslexicoSpacingSettings = .init(lineSpacing: 1.5, letterSpacing: 0.05)
+    public static let defaultSpacing: DyslexicoSpacingSettings = .init(lineSpacing: 1.5, letterSpacing: 0.05)
+
+    public init(lineSpacing: CGFloat, letterSpacing: CGFloat) {
+        self.lineSpacing = lineSpacing
+        self.letterSpacing = letterSpacing
+    }
 }

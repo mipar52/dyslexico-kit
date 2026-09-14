@@ -14,7 +14,7 @@ public enum DyslexicoLetterHighlightOption: Hashable {
     case mwPair
     case customPair(Character, Character)
     
-    var pairColor: (Color, Color) {
+    public var pairColor: (Color, Color) {
         switch self {
         case .bdPair:
             return (DyslexicoColors.highlightB, DyslexicoColors.highlightD)
@@ -27,7 +27,7 @@ public enum DyslexicoLetterHighlightOption: Hashable {
         }
     }
     
-    func makePair(for letter: Character, and letterTwo: Character) ->  DyslexicoLetterHighlightOption {
+    public func makePair(for letter: Character, and letterTwo: Character) ->  DyslexicoLetterHighlightOption {
         return .customPair(letter, letterTwo)
     }
 }
