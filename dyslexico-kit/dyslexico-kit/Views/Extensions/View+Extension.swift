@@ -44,5 +44,16 @@ public extension View {
             .tracking(typography.spacingSettings.letterSpacing)
             .lineSpacing(typography.spacingSettings.lineSpacing)
     }
-}
 
+    func dyslexicoTextLayout(_ layout: DyslexicoTextLayout) -> some View {
+        applyDyslexicoTextLayout(layout)
+    }
+
+    func dyslexicoInputChrome(isFocused: Bool, hasError: Bool) -> some View {
+        modifier(DyslexicoInputChromeModifier(isFocused: isFocused, hasError: hasError))
+    }
+
+    func dyslexicoReadableBackground() -> some View {
+        modifier(DyslexicoReadableBackgroundModifier())
+    }
+}
