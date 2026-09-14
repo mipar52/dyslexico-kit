@@ -7,33 +7,41 @@
 
 import SwiftUI
 
-struct DyslexicoTextField: View {
+public struct DyslexicoTextField: View {
 
-    let title: LocalizedStringResource?
-    let placeholder: LocalizedStringResource
-    let systemImage: String?
-    let isSecure: Bool
-    let error: LocalizedStringResource?
+    @Environment(\.dyslexicoTypography) private var typography
 
-    var keyboardType: UIKeyboardType = .default
-    var textContentType: UITextContentType?
-    var autocapitalization: TextInputAutocapitalization = .sentences
-    var autocorrectionDisabled: Bool = true
-    var submitLabel: SubmitLabel = .done
-    var showsClearButton: Bool = true
-    var onSubmit: (() -> Void)?
+    private let title: LocalizedStringResource?
+    private let placeholder: LocalizedStringResource
+    private let systemImage: String?
+    private let isSecure: Bool
+    private let error: LocalizedStringResource?
+    private let titleTextSettings: DyslexicoTextSettings
+    private let inputTextSettings: DyslexicoTextSettings
+    private let errorTextSettings: DyslexicoTextSettings
+
+    private var keyboardType: UIKeyboardType = .default
+    private var textContentType: UITextContentType?
+    private var autocapitalization: TextInputAutocapitalization = .sentences
+    private var autocorrectionDisabled: Bool = true
+    private var submitLabel: SubmitLabel = .done
+    private var showsClearButton: Bool = true
+    private var onSubmit: (() -> Void)?
 
     @Binding var text: String
     @FocusState private var isFocused: Bool
     @State private var isPasswordVisible = false
 
 
-    init(
+    public init(
         title: LocalizedStringResource? = nil,
         placeholder: LocalizedStringResource,
         systemImage: String? = nil,
         isSecure: Bool = false,
         error: LocalizedStringResource? = nil,
+        titleTextSettings: DyslexicoTextSettings = .caption,
+        inputTextSettings: DyslexicoTextSettings = .input,
+        errorTextSettings: DyslexicoTextSettings = .init(role: .caption, colorOverride: .error),
         keyboardType: UIKeyboardType = .default,
         textContentType: UITextContentType? = nil,
         autocapitalization: TextInputAutocapitalization = .sentences,
@@ -48,6 +56,9 @@ struct DyslexicoTextField: View {
         self.systemImage = systemImage
         self.isSecure = isSecure
         self.error = error
+        self.titleTextSettings = titleTextSettings
+        self.inputTextSettings = inputTextSettings
+        self.errorTextSettings = errorTextSettings
         self.keyboardType = keyboardType
         self.textContentType = textContentType
         self.autocapitalization = autocapitalization
@@ -58,30 +69,25 @@ struct DyslexicoTextField: View {
         self._text = text
     }
 
-    var body: some View {
+    public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let title {
-                DyslexicoText(
-                    text: title,
-                    role: .caption,
-                    type: .bold,
-                    foregroundStyle: DyslexicoColors.textSecondary
-                )
+                DyslexicoTextView(title, textSettings: titleTextSettings)
             }
 
             HStack(spacing: 10) {
                 if let systemImage {
                     Image(systemName: systemImage)
                         .font(.system(size: 16, weight: .semibold))
-                        .foregroundStyle(isFocused ? DyslexicoColors.accentPrimary : DyslexicoColors.textSecondary)
+                        .foregroundStyle(isFocused ? DyslexicoColors.creamBackgroundColor : DyslexicoColors.darkBackgroundColor)
                         .accessibilityHidden(true)
                 }
 
                 field
-                    .font(prefs.selectedFont.font(size: prefs.fontSize, type: .regular))
-                    .foregroundStyle(prefs.selectedTextColor.color)
-                    .tracking(prefs.increasedLetterSpacing ? 2 : 0)
-                    .kerning(prefs.increasedLetterSpacing ? 0.6 : 0)
+                    .font(typography.font(for: inputTextSettings))
+                    .foregroundStyle(typography.color(for: inputTextSettings))
+                    .tracking(typography.spacingSettings.letterSpacing)
+                    .lineSpacing(typography.spacingSettings.lineSpacing)
                     .keyboardType(keyboardType)
                     .textContentType(textContentType)
                     .textInputAutocapitalization(autocapitalization)
@@ -99,7 +105,8 @@ struct DyslexicoTextField: View {
                         Image(systemName: isPasswordVisible ? "eye.slash" : "eye")
                             .foregroundStyle(DyslexicoColors.accentPrimary)
                     }
-                    .accessibilityLabel(isPasswordVisible ? .accessibilityHidePassword : .accessibilityShowPassword)
+                    .accessibilityLabel(isPasswordVisible ? Text("Hide password") : Text("Show password"))
+                    .accessibilityHint(Text("Shows or hides the password."))
                 }
 
                 if showsClearButton && !text.isEmpty && !isSecure {
@@ -109,7 +116,8 @@ struct DyslexicoTextField: View {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(DyslexicoColors.textSecondary.opacity(0.65))
                     }
-                    .accessibilityLabel(.accessibilityClearText)
+                    .accessibilityLabel(Text("Clear text"))
+                    .accessibilityHint(Text("Clears the text."))
                 }
             }
             .padding(.horizontal, 14)
@@ -124,11 +132,7 @@ struct DyslexicoTextField: View {
             }
 
             if let error {
-                DyslexicoText(
-                    text: error,
-                    role: .caption,
-                    foregroundStyle: DyslexicoColors.semanticError
-                )
+                DyslexicoTextView(error, textSettings: errorTextSettings)
             }
         }
         .animation(.easeOut(duration: 0.15), value: isFocused)
@@ -141,9 +145,11 @@ struct DyslexicoTextField: View {
         if isSecure && !isPasswordVisible {
             SecureField("", text: $text, prompt: prompt)
                 .accessibilityLabel(Text(title ?? placeholder))
+                .accessibilityHint(error.map { Text($0) } ?? Text(""))
         } else {
             TextField("", text: $text, prompt: prompt)
                 .accessibilityLabel(Text(title ?? placeholder))
+                .accessibilityHint(error.map { Text($0) } ?? Text(""))
         }
     }
 
@@ -165,6 +171,27 @@ struct DyslexicoTextField: View {
     }
 }
 
+private struct DyslexicoTextFieldPreview: View {
+    @State private var text = ""
+
+    var body: some View {
+        DyslexicoTextField(
+            title: "Email",
+            placeholder: "name@example.com",
+            systemImage: "envelope",
+            textContentType: .emailAddress,
+            text: $text
+        )
+        .padding()
+    }
+}
+
+private struct DyslexicoTextFieldPreviews: PreviewProvider {
+    static var previews: some View {
+        DyslexicoTextFieldPreview()
+    }
+}
+
 #Preview {
-    DyslexicoTextField()
+    DyslexicoTextFieldPreviews.previews
 }
