@@ -7,75 +7,63 @@
 
 import SwiftUI
 
-struct DyslexicoTextView: View {
+public struct DyslexicoTextView: View {
+    @Environment(\.dyslexicoTypography) private var typography
+
+    private let text: Text
+    private let accessibilityLabel: String
     
-    let text: LocalizedStringResource
-    var role: DyslexicoTextRole
-    var type: DyslexicoFontWeight?
-    var foregroundStyle: Color?
-    var layout: DyslexicoTextLayout = .wrap(lines: nil)
-    var alignment: TextAlignment = .leading
+    private let textSettings: DyslexicoTextSettings
+    private let layout: DyslexicoTextLayout
+    private let alignment: TextAlignment
     
-    var body: some View {
-        Text(text)
-            .font(role.font(for: prefs, type: type))
-            .foregroundStyle(foregroundStyle ?? role.color(for: prefs))
-            .tracking(prefs.increasedLetterSpacing ? 2 : 0)
-            .kerning(prefs.increasedLetterSpacing ? 0.6 : 0)
+    public init(_ text: String,
+         accessibilityLabel: String? = nil,
+         textSettings: DyslexicoTextSettings = .body,
+         layout: DyslexicoTextLayout = .wrap(lines: nil),
+         alignment: TextAlignment = .leading) {
+        self.text = Text(text)
+        self.accessibilityLabel = accessibilityLabel ?? text
+        self.textSettings = textSettings
+        self.layout = layout
+        self.alignment = alignment
+    }
+
+    public init(_ text: LocalizedStringResource,
+         accessibilityLabel: String? = nil,
+         textSettings: DyslexicoTextSettings = .body,
+         layout: DyslexicoTextLayout = .wrap(lines: nil),
+         alignment: TextAlignment = .leading) {
+        self.text = Text(text)
+        self.accessibilityLabel = accessibilityLabel ?? String(localized: text)
+        self.textSettings = textSettings
+        self.layout = layout
+        self.alignment = alignment
+    }
+    
+    public var body: some View {
+        text
+            .font(typography.font(for: textSettings))
+            .foregroundStyle(typography.color(for: textSettings))
+            .tracking(typography.spacingSettings.letterSpacing)
+            .lineSpacing(typography.spacingSettings.lineSpacing)
             .multilineTextAlignment(alignment)
             .applyDyslexicoTextLayout(layout)
-            .accessibilityLabel(text)
-    }
-    
-    enum TextRole {
-        case title, body, caption
-        
-        func font(for prefs: UserTypographyPreferences, type: FontTypeOption?) -> Font {
-            switch self {
-            case .title:
-                return prefs.selectedFont.font(size: prefs.fontSize + 16, type: type ?? .bold)
-            case .body:
-                return prefs.selectedFont.font(size: prefs.fontSize, type: type ?? .regular)
-            case .caption:
-                return prefs.selectedFont.font(size: prefs.fontSize - 2, type: type ?? .light)
-            }
-        }
-        
-        func color(for prefs: UserTypographyPreferences) -> Color {
-            prefs.selectedTextColor.color
-        }
+            .accessibilityLabel(accessibilityLabel)
     }
 }
 
-enum DyslexicoTextLayout {
-    case wrap(lines: Int?)
-    case singleLine
-    case scaleToFit(lines: Int, minimumScale: CGFloat)
-}
-
-private extension View {
-    @ViewBuilder
-    func applyDyslexicoTextLayout(_ layout: DyslexicoTextLayout) -> some View {
-        switch layout {
-        case .wrap(let lines):
-            self
-                .lineLimit(lines)
-                .fixedSize(horizontal: false, vertical: true)
-
-        case .singleLine:
-            self
-                .lineLimit(1)
-                .truncationMode(.tail)
-
-        case .scaleToFit(let lines, let minimumScale):
-            self
-                .lineLimit(lines)
-                .minimumScaleFactor(minimumScale)
-                .allowsTightening(true)
-        }
+private struct DyslexicoTextViewPreviews: PreviewProvider {
+    static var previews: some View {
+        DyslexicoTextView(
+            "Sample text",
+            textSettings: DyslexicoTextSettings(role: .body),
+            layout: .singleLine,
+            alignment: .center
+        )
     }
 }
 
 #Preview {
-    DyslexicoTextView(text: <#LocalizedStringResource#>, role: <#DyslexicoTextRole#>)
+    DyslexicoTextViewPreviews.previews
 }
