@@ -1,4 +1,6 @@
-# dyslexico-ios-sdk
+# DyslexicoKit
+
+<img width="683" height="648" alt="DyslexicoKit" src="https://github.com/user-attachments/assets/b6acc3b2-f6d6-40ca-9e7c-7f7245f2ad55" />
 
 ## Typography Settings
 
