@@ -4,7 +4,7 @@ Build readable SwiftUI interfaces with dyslexia-friendly typography, spacing, co
 
 ## Overview
 
-DyslexicoKit provides a typography system and a small set of SwiftUI views that help client apps render readable text consistently. The core integration point is ``DyslexicoTypographySettings``. Configure it once, inject it into the SwiftUI environment, and the SDK views and modifiers below that point will use the same reading preferences.
+DyslexicoKit provides a typography system and a smal3l set of SwiftUI views that help client apps render readable text consistently. The core integration point is ``DyslexicoTypographySettings``. Configure it once, inject it into the SwiftUI environment, and the SDK views and modifiers below that point will use the same reading preferences.
 
 ```swift
 ContentView()
