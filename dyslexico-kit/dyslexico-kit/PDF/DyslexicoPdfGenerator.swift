@@ -10,7 +10,7 @@ import UIKit
 
 public struct DyslexicoPdfGenerator {
     
-    public func exportToPdf(with document: DyslexicoDocument, pdfConfiguration: DyslexicoPdfConfiguration, typography: DyslexicoTypographySettings) async throws -> (URL, Data) {
+    public func exportToPdf(with document: DyslexicoDocument, pdfConfiguration: DyslexicoPdfConfiguration, typography: DyslexicoTypographySettings) async throws -> DyslexicoPdfDocumentResult {
         let pages = document.pages.filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
         guard !pages.isEmpty else { throw ExportError.noContentToExport }
         
@@ -21,7 +21,7 @@ public struct DyslexicoPdfGenerator {
         )
     }
     
-    private func generatePdf(document: DyslexicoDocument, pdfConfiguration: DyslexicoPdfConfiguration, typography: DyslexicoTypographySettings) async throws -> (URL, Data) {
+    private func generatePdf(document: DyslexicoDocument, pdfConfiguration: DyslexicoPdfConfiguration, typography: DyslexicoTypographySettings) async throws -> DyslexicoPdfDocumentResult {
         let style = resolveStyle(pdfConfiguration: pdfConfiguration, typography: typography)
         let pageSize = pdfConfiguration.pageSize.size
         
@@ -90,7 +90,7 @@ public struct DyslexicoPdfGenerator {
             .appendingPathExtension("pdf")
         
         try pdfData.write(to: url, options: .atomic)
-        return (url, pdfData)
+        return DyslexicoPdfDocumentResult(url: url, data: pdfData)
     }
     
     

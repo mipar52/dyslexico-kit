@@ -7,8 +7,7 @@
 
 import Foundation
 
-struct DyslexicoPdfDocument {
+public struct DyslexicoPdfDocumentResult {
+    let url: URL
     let data: Data
 }
-
-
