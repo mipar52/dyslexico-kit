@@ -8,6 +8,11 @@
 import Foundation
 
 public struct DyslexicoPdfDocumentResult {
-    let url: URL
-    let data: Data
+    public let url: URL
+    public let data: Data
+    
+    public init(url: URL, data: Data) {
+        self.url = url
+        self.data = data
+    }
 }

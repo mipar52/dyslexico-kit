@@ -8,7 +8,13 @@
 import Foundation
 
 public struct DyslexicoDocument: Codable {
-    let documentAuthor: String
-    let title: String
-    let pages: [String]
+    public let documentAuthor: String?
+    public let title: String
+    public let pages: [String]
+    
+    public init(documentAuthor: String?, title: String, pages: [String]) {
+        self.documentAuthor = documentAuthor
+        self.title = title
+        self.pages = pages
+    }
 }
