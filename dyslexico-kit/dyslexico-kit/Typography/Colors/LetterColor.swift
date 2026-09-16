@@ -7,9 +7,11 @@
 
 import Foundation
 import SwiftUI
+import UIKit
 
 public enum LetterColor {
     case black, brown, navy, charcoal, error
+    case custom(red: Double, green: Double, blue: Double, opacity: Double = 1)
 
     public var color: Color {
         switch self {
@@ -23,6 +25,8 @@ public enum LetterColor {
             return DyslexicoColors.charcoalTextColor
         case .error:
             return DyslexicoColors.semanticError
+        case .custom(let red, let green, let blue, let opacity):
+            return Color(red: red, green: green, blue: blue, opacity: opacity)
         }
     }
     
@@ -38,14 +42,8 @@ public enum LetterColor {
             return UIColor(DyslexicoColors.charcoalTextColor)
         case .error:
             return UIColor(DyslexicoColors.semanticError)
+        case .custom:
+            return UIColor(color)
         }
-    }
-    
-    public func customColor(for color: Color) -> Color {
-        return color
-    }
-    
-    public func customUiColor(for color: UIColor) -> UIColor {
-        return color
     }
 }

@@ -6,12 +6,15 @@
 ## Table of Contents
 
 - [Typography Settings](#typography-settings)
+- [Custom Colors and Highlights](#custom-colors-and-highlights)
 - [SwiftUI Integration](#swiftui-integration)
 - [Text Views](#text-views)
 - [Text Fields](#text-fields)
 - [Text Editors](#text-editors)
 - [Buttons and Labels](#buttons-and-labels)
 - [View Modifiers](#view-modifiers)
+- [Attributed Strings](#attributed-strings)
+- [PDF Generation](#pdf-generation)
 
 ## Typography Settings
 
@@ -21,8 +24,8 @@ For simple text, ask the settings object for a font by text role:
 
 ```swift
 Text("Readable title")
-    .font(settings.font(for: .title))
-    .foregroundStyle(settings.color(for: .title))
+    .font(settings.font(for: DyslexicoTextRole.title))
+    .foregroundStyle(settings.color(for: DyslexicoTextSettings.title))
 ```
 
 Text roles describe the purpose of a piece of text:
@@ -61,8 +64,44 @@ The SDK resolves text styling in this order:
 UIKit integrations can use the matching `UIFont` and `UIColor` helpers:
 
 ```swift
-label.font = settings.uiFont(for: .body)
-label.textColor = settings.uiColor(for: .body)
+label.font = settings.uiFont(for: DyslexicoTextRole.body)
+label.textColor = settings.uiColor(for: DyslexicoTextSettings.body)
+```
+
+## Custom Colors and Highlights
+
+Client apps can store custom text and background colors directly in `DyslexicoColorSettings`:
+
+```swift
+let colorSettings = DyslexicoColorSettings(
+    fontColor: .custom(red: 0.12, green: 0.12, blue: 0.12),
+    backgroundColor: .custom(red: 0.98, green: 0.95, blue: 0.88)
+)
+```
+
+Letter highlighting supports built-in pairs and client-defined pairs:
+
+```swift
+let highlights: Set<DyslexicoLetterHighlightOption> = [
+    .bdPair,
+    .customColoredPair(
+        "r",
+        "n",
+        firstColor: .custom(red: 1.0, green: 0.86, blue: 0.58),
+        secondColor: .custom(red: 0.68, green: 0.86, blue: 1.0)
+    )
+]
+```
+
+Use those values when creating typography settings:
+
+```swift
+let settings = DyslexicoTypographySettings(
+    fontSettings: .init(family: .openDyslexic, size: 22),
+    fontHighlightOptions: highlights,
+    colorSettings: colorSettings,
+    spacingSettings: .init(lineSpacing: 8, letterSpacing: 1.4)
+)
 ```
 
 ## SwiftUI Integration
@@ -99,8 +138,6 @@ DyslexicoText(
     alignment: .center
 )
 ```
-
-`DyslexicoTextView` remains available as a compatibility alias for `DyslexicoText`.
 
 ## Text Fields
 
@@ -235,4 +272,66 @@ Text layout helpers are available separately:
 Text("Long readable paragraph")
     .dyslexicoText(role: .body)
     .dyslexicoTextLayout(.wrap(lines: nil))
+```
+
+## Attributed Strings
+
+If you need highlighted text inside your own SwiftUI view, use `DyslexicoTextUtilities` to build an `AttributedString` from the same typography settings:
+
+```swift
+let attributed = DyslexicoTextUtilities.createStyledAttributedString(
+    "Readable custom text",
+    with: settings,
+    role: .body
+)
+
+Text(attributed)
+```
+
+For UIKit, PDF, or Core Text flows, use the `NSAttributedString` helper:
+
+```swift
+let attributed = DyslexicoTextUtilities.createStyledNSAttributedString(
+    "Readable PDF text",
+    bodyFont: settings.uiFont(for: DyslexicoTextRole.body),
+    textColor: settings.uiColor(for: DyslexicoTextSettings.body),
+    kerning: settings.spacingSettings.letterSpacing,
+    lineSpacing: settings.spacingSettings.lineSpacing,
+    highlightOptions: settings.fontHighlightOptions,
+    includeHighlights: true
+)
+```
+
+## PDF Generation
+
+`DyslexicoPdfGenerator` creates dyslexia-friendly PDFs from client-provided typography settings. This lets each app generate PDFs for the reader's actual preferences rather than a single SDK default.
+
+```swift
+let document = DyslexicoDocument(
+    documentAuthor: "Dyslexico",
+    title: "Reading Notes",
+    pages: [
+        "First page of readable content.",
+        "Second page of readable content."
+    ]
+)
+
+let configuration = DyslexicoPdfConfiguration(
+    pdfAuthor: "Dyslexico",
+    style: .dyslexiaFriendly,
+    includeLetterHighlights: true,
+    pageSize: .a4
+)
+
+let result = try await DyslexicoPdfGenerator().exportToPdf(
+    with: document,
+    pdfConfiguration: configuration,
+    typography: settings
+)
+```
+
+Use `.standard` when the client needs a plain PDF export:
+
+```swift
+let plainConfiguration = DyslexicoPdfConfiguration(style: .standard)
 ```
