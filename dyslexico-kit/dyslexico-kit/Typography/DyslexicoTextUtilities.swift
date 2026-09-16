@@ -11,7 +11,7 @@ import SwiftUI
 public struct DyslexicoTextUtilities {
     /// SwiftUI variant — for use inside SwiftUI views.
     /// Returns an AttributedString that can be passed to `Text(_:)`.
-    static func createStyledAttributedString(
+    public static func createStyledAttributedString(
         _ text: String,
         with typography: DyslexicoTypographySettings,
         role: DyslexicoTextRole = .body
@@ -39,7 +39,7 @@ public struct DyslexicoTextUtilities {
     /// PDF rendering needs to express them as concrete UIKit types,
     /// and the caller may want overrides (e.g. plain style vs dyslexia-friendly).
     /// public struct DyslexicoPdfUtilties {
-    static func createStyledNSAttributedString(
+    public static func createStyledNSAttributedString(
         _ text: String,
         bodyFont: UIFont,
         textColor: UIColor,

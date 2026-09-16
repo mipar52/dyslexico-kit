@@ -35,54 +35,77 @@ struct DyslexicoHighlightUtilities {
     }
     
     static func highlightColors(
-        for options:  Set<DyslexicoLetterHighlightOption>
+        for options: Set<DyslexicoLetterHighlightOption>
     ) -> [(characters: [Character], swiftUIColor: Color, uiColor: UIColor)] {
         var entries: [(characters: [Character], swiftUIColor: Color, uiColor: UIColor)] = []
         
-        options.forEach { pair in
-            if pair == .bdPair {
-                entries.append((
-                    characters: ["b", "B"],
-                    swiftUIColor: DyslexicoColors.highlightB,
-                    uiColor: UIColor(DyslexicoColors.highlightB)
+        options.forEach { option in
+            switch option {
+            case .bdPair:
+                entries.append(contentsOf: makeEntries(
+                    first: "b",
+                    second: "d",
+                    colors: option.pairColor
                 ))
-                entries.append((
-                    characters: ["d", "D"],
-                    swiftUIColor: DyslexicoColors.highlightD,
-                    uiColor: UIColor(DyslexicoColors.highlightD)
+            case .pqPair:
+                entries.append(contentsOf: makeEntries(
+                    first: "p",
+                    second: "q",
+                    colors: option.pairColor
                 ))
-            }
-            if pair == .pqPair {
-                entries.append((
-                    characters: ["p", "P"],
-                    swiftUIColor: DyslexicoColors.highlightP,
-                    uiColor: UIColor(DyslexicoColors.highlightP)
+            case .mwPair:
+                entries.append(contentsOf: makeEntries(
+                    first: "m",
+                    second: "w",
+                    colors: option.pairColor
                 ))
-                entries.append((
-                    characters: ["q", "Q"],
-                    swiftUIColor: DyslexicoColors.highlightQ,
-                    uiColor: UIColor(DyslexicoColors.highlightQ)
+            case .customPair(let first, let second):
+                entries.append(contentsOf: makeEntries(
+                    first: first,
+                    second: second,
+                    colors: option.pairColor
                 ))
-            }
-            if pair == .mwPair {
-                entries.append((
-                    characters: ["m", "M"],
-                    swiftUIColor: DyslexicoColors.highlightM,
-                    uiColor: UIColor(DyslexicoColors.highlightM)
-                ))
-                entries.append((
-                    characters: ["w", "W"],
-                    swiftUIColor: DyslexicoColors.highlightW,
-                    uiColor: UIColor(DyslexicoColors.highlightW)
+            case .customColoredPair(let first, let second, _, _):
+                entries.append(contentsOf: makeEntries(
+                    first: first,
+                    second: second,
+                    colors: option.pairColor
                 ))
             }
-            
-            // need case for custom pairs
         }
-        
 
-        
         return entries
     }
     
+    private static func makeEntries(
+        first: Character,
+        second: Character,
+        colors: (DyslexicoHighlightColor, DyslexicoHighlightColor)
+    ) -> [(characters: [Character], swiftUIColor: Color, uiColor: UIColor)] {
+        [
+            (
+                characters: characterVariants(for: first),
+                swiftUIColor: colors.0.color,
+                uiColor: colors.0.uiColor
+            ),
+            (
+                characters: characterVariants(for: second),
+                swiftUIColor: colors.1.color,
+                uiColor: colors.1.uiColor
+            )
+        ]
+    }
+
+    private static func characterVariants(for character: Character) -> [Character] {
+        let variants = [
+            String(character),
+            String(character).lowercased(),
+            String(character).uppercased()
+        ]
+
+        return Array(Set(variants.compactMap { value in
+            guard value.count == 1 else { return nil }
+            return value.first
+        }))
+    }
 }
