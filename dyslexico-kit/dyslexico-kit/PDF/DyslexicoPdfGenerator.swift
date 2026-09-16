@@ -12,10 +12,15 @@ public struct DyslexicoPdfGenerator {
     
     public func exportToPdf(with document: DyslexicoDocument, pdfConfiguration: DyslexicoPdfConfiguration, typography: DyslexicoTypographySettings) async throws -> DyslexicoPdfDocumentResult {
         let pages = document.pages.filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
-        guard !pages.isEmpty else { throw ExportError.noContentToExport }
+        guard !pages.isEmpty else { throw DyslexicoExportError.noContentToExport }
+        
+        let filteredDocument: DyslexicoDocument = .init(
+            documentAuthor: document.documentAuthor,
+            title: document.title,
+            pages: pages)
         
         return try await generatePdf(
-            document: document,
+            document: filteredDocument,
             pdfConfiguration: pdfConfiguration,
             typography: typography
         )
@@ -113,8 +118,8 @@ public struct DyslexicoPdfGenerator {
                 kerning: 0
             )
         case .dyslexiaFriendly:
-            let title = typography.fontSettings.uiFont.withSize(24)
-            let body = typography.fontSettings.uiFont
+            let title = typography.uiFont(for: DyslexicoTextRole.title)
+            let body = typography.uiFont(for: DyslexicoTextRole.body)
             
             return ResolvedStyle(
                 bodyFont: body,
