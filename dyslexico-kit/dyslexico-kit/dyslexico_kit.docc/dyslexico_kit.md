@@ -4,7 +4,7 @@ Build readable SwiftUI interfaces with dyslexia-friendly typography, spacing, co
 
 ## Overview
 
-DyslexicoKit provides a typography system and a smal3l set of SwiftUI views that help client apps render readable text consistently. The core integration point is ``DyslexicoTypographySettings``. Configure it once, inject it into the SwiftUI environment, and the SDK views and modifiers below that point will use the same reading preferences.
+DyslexicoKit provides a typography system and a small set of SwiftUI views that help client apps render readable text consistently. The core integration point is ``DyslexicoTypographySettings``. Configure it once, inject it into the SwiftUI environment, and the SDK views and modifiers below that point will use the same reading preferences.
 
 ```swift
 ContentView()
@@ -36,6 +36,38 @@ DyslexicoText("Welcome", textSettings: titleSettings)
 ```
 
 When resolving text, the SDK prefers text-specific overrides, then global typography settings, then defaults from the selected role.
+
+### Custom Colors and Highlights
+
+Use custom color cases when a client app needs to store reader-specific text or background colors:
+
+```swift
+let colorSettings = DyslexicoColorSettings(
+    fontColor: .custom(red: 0.12, green: 0.12, blue: 0.12),
+    backgroundColor: .custom(red: 0.98, green: 0.95, blue: 0.88)
+)
+```
+
+Letter highlighting can combine built-in pairs with custom colored pairs:
+
+```swift
+let highlights: Set<DyslexicoLetterHighlightOption> = [
+    .bdPair,
+    .customColoredPair(
+        "r",
+        "n",
+        firstColor: .custom(red: 1.0, green: 0.86, blue: 0.58),
+        secondColor: .custom(red: 0.68, green: 0.86, blue: 1.0)
+    )
+]
+
+let typography = DyslexicoTypographySettings(
+    fontSettings: .init(family: .openDyslexic, size: 22),
+    fontHighlightOptions: highlights,
+    colorSettings: colorSettings,
+    spacingSettings: .init(lineSpacing: 8, letterSpacing: 1.4)
+)
+```
 
 ## SwiftUI Views
 
@@ -112,8 +144,64 @@ Text("Long readable paragraph")
 The same settings can resolve UIKit fonts and colors:
 
 ```swift
-label.font = typography.uiFont(for: .body)
-label.textColor = typography.uiColor(for: .body)
+label.font = typography.uiFont(for: DyslexicoTextRole.body)
+label.textColor = typography.uiColor(for: DyslexicoTextSettings.body)
+```
+
+## Attributed Strings
+
+Use ``DyslexicoTextUtilities`` when a client app needs to render styled text in a custom view without using ``DyslexicoText``:
+
+```swift
+let attributed = DyslexicoTextUtilities.createStyledAttributedString(
+    "Readable custom text",
+    with: typography,
+    role: .body
+)
+
+Text(attributed)
+```
+
+For UIKit, PDF, or Core Text rendering, use the `NSAttributedString` variant:
+
+```swift
+let attributed = DyslexicoTextUtilities.createStyledNSAttributedString(
+    "Readable PDF text",
+    bodyFont: typography.uiFont(for: DyslexicoTextRole.body),
+    textColor: typography.uiColor(for: DyslexicoTextSettings.body),
+    kerning: typography.spacingSettings.letterSpacing,
+    lineSpacing: typography.spacingSettings.lineSpacing,
+    highlightOptions: typography.fontHighlightOptions,
+    includeHighlights: true
+)
+```
+
+## PDF Generation
+
+Use ``DyslexicoPdfGenerator`` to export a readable PDF from client-provided typography settings. The generator uses the passed ``DyslexicoTypographySettings`` so client apps can create PDFs for each reader's preferences.
+
+```swift
+let document = DyslexicoDocument(
+    documentAuthor: "Dyslexico",
+    title: "Reading Notes",
+    pages: [
+        "First page of readable content.",
+        "Second page of readable content."
+    ]
+)
+
+let configuration = DyslexicoPdfConfiguration(
+    pdfAuthor: "Dyslexico",
+    style: .dyslexiaFriendly,
+    includeLetterHighlights: true,
+    pageSize: .a4
+)
+
+let result = try await DyslexicoPdfGenerator().exportToPdf(
+    with: document,
+    pdfConfiguration: configuration,
+    typography: typography
+)
 ```
 
 ## Topics
@@ -131,6 +219,8 @@ label.textColor = typography.uiColor(for: .body)
 - ``BackgroundColor``
 - ``DyslexicoSpacingSettings``
 - ``DyslexicoLetterHighlightOption``
+- ``DyslexicoHighlightColor``
+- ``DyslexicoTextUtilities``
 
 ### SwiftUI Views
 
@@ -151,3 +241,13 @@ label.textColor = typography.uiColor(for: .body)
 ### Font Resolution
 
 - ``DyslexicoFontResolver``
+
+### PDF Export
+
+- ``DyslexicoPdfGenerator``
+- ``DyslexicoDocument``
+- ``DyslexicoPdfDocumentResult``
+- ``DyslexicoPdfConfiguration``
+- ``DyslexicoExportStyle``
+- ``DyslexicoPageSize``
+- ``DyslexicoExportError``
