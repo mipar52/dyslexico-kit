@@ -108,3 +108,8 @@ xcuserdata
 **/xcshareddata/WorkspaceSettings.xcsettings
 
 # End of https://www.toptal.com/developers/gitignore/api/xcode,swift,swiftpackagemanager,swiftpm
+
+# Swift Package Manager local state
+.build/
+.swiftpm/
+Package.resolved
