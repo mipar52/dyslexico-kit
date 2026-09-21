@@ -7,6 +7,14 @@
 
 import Foundation
 
+/// Playback states published by `DyslexicoSpeechController`.
 public enum DyslexicoSpeechPlaybackState: Equatable {
-    case idle, playing, paused
+    /// No speech is currently active.
+    case idle
+
+    /// Speech is currently playing.
+    case playing
+
+    /// Speech is paused and can be resumed.
+    case paused
 }

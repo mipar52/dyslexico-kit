@@ -9,25 +9,44 @@ import Foundation
 import Combine
 import AVFoundation
 
+/// A main-actor speech controller that wraps `AVSpeechSynthesizer` for dyslexia-friendly read-aloud experiences.
 @MainActor
 public final class DyslexicoSpeechController: NSObject, ObservableObject {
+    /// The current playback state, suitable for driving SwiftUI controls.
     @Published public private(set) var state: DyslexicoSpeechPlaybackState = .idle
+
+    /// The segment currently being spoken, or `nil` when speech is idle.
     @Published public private(set) var currentSegment: DyslexicoSpeechSegment?
+
+    /// The range currently being spoken within `currentSegment`.
     @Published public private(set) var currentSpeechRange: NSRange?
 
+    /// Called when a queued segment starts speaking.
     public var onSegmentStarted: ((DyslexicoSpeechSegment) -> Void)?
+
+    /// Called when a queued segment finishes speaking.
     public var onSegmentFinished: ((DyslexicoSpeechSegment) -> Void)?
+
+    /// Called as the synthesizer advances through ranges of the current segment.
     public var onWillSpeakRange: ((NSRange, DyslexicoSpeechSegment) -> Void)?
+
+    /// Called when all queued segments finish speaking.
     public var onQueueFinished: (() -> Void)?
     
+    /// All voices currently available through Apple's speech synthesizer on this device.
     public nonisolated static var availableVoices: [AVSpeechSynthesisVoice] {
         AVSpeechSynthesisVoice.speechVoices()
     }
 
+    /// Returns available Apple speech voices that exactly match a BCP-47 language code.
     public nonisolated static func availableVoices(for language: String) -> [AVSpeechSynthesisVoice] {
         availableVoices.filter { $0.language == language }
     }
 
+    /// Resolves the best voice for the provided speech settings.
+    ///
+    /// Voice identifiers win first, then premium voices for the selected language when requested, then the
+    /// standard Apple voice for the selected language.
     public nonisolated static func defaultVoice(
         for settings: DyslexicoSpeechSettings = .defaultSettings
     ) -> AVSpeechSynthesisVoice? {
@@ -48,6 +67,7 @@ public final class DyslexicoSpeechController: NSObject, ObservableObject {
             ?? AVSpeechSynthesisVoice(language: "en-US")
     }
     
+    /// The speech settings used for newly created utterances.
     public var settings: DyslexicoSpeechSettings
     
     private let synthesizer = AVSpeechSynthesizer()
@@ -55,17 +75,26 @@ public final class DyslexicoSpeechController: NSObject, ObservableObject {
     private var currentSegmentIndex: Int?
     private var isStopping = false
 
+    /// Creates a speech controller with the provided settings.
+    ///
+    /// Keep a strong reference to the controller for as long as speech playback should be available.
     public init(settings: DyslexicoSpeechSettings = .defaultSettings) {
         self.settings = settings
         super.init()
         synthesizer.delegate = self
     }
     
+    /// Speaks a single text value.
+    ///
+    /// Empty or whitespace-only text is ignored.
     public func speak(_ text: String) throws {
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
         try speak([.init(text: text)])
     }
     
+    /// Speaks a queue of text segments in order.
+    ///
+    /// Empty segments are skipped. Starting a new queue stops any active speech before speaking the new segments.
     public func speak(_ segments: [DyslexicoSpeechSegment]) throws {
         let readableSegments = segments.filter {
             !$0.text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -82,14 +111,17 @@ public final class DyslexicoSpeechController: NSObject, ObservableObject {
         speakNextSegment()
     }
 
+    /// Compatibility overload for clients that prefer a labeled text parameter.
     public func speak(text: String) throws {
         try speak(text)
     }
 
+    /// Compatibility overload for clients that prefer a labeled segments parameter.
     public func speak(segments: [DyslexicoSpeechSegment]) throws {
         try speak(segments)
     }
     
+    /// Resumes paused speech playback.
     public func resume() {
         guard state == .paused else { return }
         if synthesizer.continueSpeaking() {
@@ -97,6 +129,7 @@ public final class DyslexicoSpeechController: NSObject, ObservableObject {
         }
     }
 
+    /// Pauses active speech at the next word boundary.
     public func pause() {
         guard synthesizer.isSpeaking else { return }
         if synthesizer.pauseSpeaking(at: .word) {
@@ -104,6 +137,7 @@ public final class DyslexicoSpeechController: NSObject, ObservableObject {
         }
     }
     
+    /// Stops active speech immediately and clears the queued segments.
     public func stop() {
         let wasActive = synthesizer.isSpeaking || state == .paused
         isStopping = wasActive
@@ -192,6 +226,7 @@ extension DyslexicoSpeechController {
 }
 
 extension DyslexicoSpeechController: AVSpeechSynthesizerDelegate {
+    /// Handles completion from Apple's speech synthesizer and advances the segment queue.
     nonisolated public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didFinish utterance: AVSpeechUtterance) {
         Task { @MainActor in
             guard !isStopping else {
@@ -204,6 +239,7 @@ extension DyslexicoSpeechController: AVSpeechSynthesizerDelegate {
         }
     }
 
+    /// Handles cancellation from Apple's speech synthesizer.
     nonisolated public func speechSynthesizer(_ synthesizer: AVSpeechSynthesizer, didCancel utterance: AVSpeechUtterance) {
         Task { @MainActor in
             guard isStopping else { return }
@@ -211,6 +247,7 @@ extension DyslexicoSpeechController: AVSpeechSynthesizerDelegate {
         }
     }
     
+    /// Publishes the range that Apple's speech synthesizer is about to speak.
     nonisolated public func speechSynthesizer(
         _ synthesizer: AVSpeechSynthesizer,
         willSpeakRangeOfSpeechString characterRange: NSRange,
