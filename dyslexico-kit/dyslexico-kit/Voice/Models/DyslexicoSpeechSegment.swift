@@ -7,7 +7,12 @@
 
 import Foundation
 
-public struct DyslexicoSpeechSegment {
+public struct DyslexicoSpeechSegment: Identifiable, Hashable {
     public let id: UUID
-    public let speechSegment: String
+    public let text: String
+
+    public init(id: UUID = UUID(), text: String) {
+        self.id = id
+        self.text = text
+    }
 }

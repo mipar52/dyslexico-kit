@@ -7,6 +7,6 @@
 
 import Foundation
 
-public enum DyslexicoSpeechPlaybackState {
+public enum DyslexicoSpeechPlaybackState: Equatable {
     case idle, playing, paused
 }

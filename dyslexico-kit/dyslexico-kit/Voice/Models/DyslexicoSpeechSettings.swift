@@ -7,25 +7,35 @@
 
 public struct DyslexicoSpeechSettings: Hashable {
     
-    public var speechLanguage: String?
-    public var speechRate: Float?
-    public var pitchMultiplier: Float?
-    public var volume: Float?
-    public var prefesPremiumVoice: Bool
+    public var language: String?
+    public var voiceIdentifier: String?
+    public var rate: Float
+    public var pitchMultiplier: Float
+    public var volume: Float
+    public var prefersPremiumVoice: Bool
     
     public static let defaultSettings: DyslexicoSpeechSettings = .init(
-        speechLanguage: "en-US",
-        speechRate: 0.46,
+        language: "en-US",
+        voiceIdentifier: nil,
+        rate: 0.46,
         pitchMultiplier: 1.0,
         volume: 1.0,
-        prefesPremiumVoice: true
+        prefersPremiumVoice: true
     )
     
-    public init(speechLanguage: String? = nil, speechRate: Float? = nil, pitchMultiplier: Float? = nil, volume: Float? = nil, prefesPremiumVoice: Bool) {
-        self.speechLanguage = speechLanguage
-        self.speechRate = speechRate
+    public init(
+        language: String? = "en-US",
+        voiceIdentifier: String? = nil,
+        rate: Float = 0.46,
+        pitchMultiplier: Float = 1.0,
+        volume: Float = 1.0,
+        prefersPremiumVoice: Bool = true
+    ) {
+        self.language = language
+        self.voiceIdentifier = voiceIdentifier
+        self.rate = rate
         self.pitchMultiplier = pitchMultiplier
         self.volume = volume
-        self.prefesPremiumVoice = prefesPremiumVoice
+        self.prefersPremiumVoice = prefersPremiumVoice
     }
 }
