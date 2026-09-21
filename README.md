@@ -15,6 +15,7 @@
 - [View Modifiers](#view-modifiers)
 - [Attributed Strings](#attributed-strings)
 - [PDF Generation](#pdf-generation)
+- [Voice and Read Aloud](#voice-and-read-aloud)
 
 ## Typography Settings
 
@@ -334,4 +335,73 @@ Use `.standard` when the client needs a plain PDF export:
 
 ```swift
 let plainConfiguration = DyslexicoPdfConfiguration(style: .standard)
+```
+
+## Voice and Read Aloud
+
+Use `DyslexicoSpeechController` when a client app needs read-aloud controls without managing `AVSpeechSynthesizer` directly.
+
+```swift
+let speech = DyslexicoSpeechController(
+    settings: .init(
+        language: "en-US",
+        rate: 0.46,
+        pitchMultiplier: 1.0,
+        volume: 1.0,
+        prefersPremiumVoice: true
+    )
+)
+
+try speech.speak("Readable text for this user.")
+```
+
+The controller publishes playback state and exposes simple controls:
+
+```swift
+speech.pause()
+speech.resume()
+speech.stop()
+```
+
+For reader-style interfaces, pass segments and react to the active segment:
+
+```swift
+let segments = lines.map {
+    DyslexicoSpeechSegment(id: $0.id, text: $0.text)
+}
+
+speech.onSegmentStarted = { segment in
+    focusedLineID = segment.id
+}
+
+speech.onWillSpeakRange = { range, segment in
+    highlightedWordRange = range
+    focusedLineID = segment.id
+}
+
+speech.onQueueFinished = {
+    focusedLineID = nil
+    highlightedWordRange = nil
+}
+
+try speech.speak(segments)
+```
+
+Clients can list Apple/system voices and store a selected voice identifier in `DyslexicoSpeechSettings`:
+
+```swift
+let englishVoices = DyslexicoSpeechController.availableVoices(for: "en-US")
+let selectedVoice = englishVoices.first
+
+let settings = DyslexicoSpeechSettings(
+    language: "en-US",
+    voiceIdentifier: selectedVoice?.identifier,
+    rate: 0.44
+)
+```
+
+If the host app already manages `AVAudioSession`, disable SDK audio-session configuration:
+
+```swift
+let settings = DyslexicoSpeechSettings(configuresAudioSession: false)
 ```
