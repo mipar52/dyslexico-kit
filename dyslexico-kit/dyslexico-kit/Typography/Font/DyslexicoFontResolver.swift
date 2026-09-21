@@ -7,7 +7,9 @@
 
 import SwiftUI
 
+/// Converts DyslexicoKit font settings into SwiftUI and UIKit font instances.
 public enum DyslexicoFontResolver {
+    /// Resolves a `DyslexicoFontSettings` value into a SwiftUI `Font`.
     public static func font(from settings: DyslexicoFontSettings) -> Font {
         let weight = resolvedWeight(from: settings)
 
@@ -25,6 +27,7 @@ public enum DyslexicoFontResolver {
         }
     }
     
+    /// Resolves a `DyslexicoFontSettings` value into a UIKit `UIFont`.
     public static func uiFont(from settings: DyslexicoFontSettings) -> UIFont {
         let weight = resolvedWeight(from: settings)
 

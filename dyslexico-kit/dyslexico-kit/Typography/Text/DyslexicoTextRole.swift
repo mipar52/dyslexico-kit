@@ -7,13 +7,24 @@
 
 import SwiftUI
 
+/// Semantic text roles that let DyslexicoKit size and weight text consistently across views and PDF output.
 public enum DyslexicoTextRole {
+    /// A larger, bolder role for page titles, section headings, and PDF cover titles.
     case title
+
+    /// The default reading role for paragraphs and main content.
     case body
+
+    /// A smaller role for labels, helper text, validation messages, and metadata.
     case caption
+
+    /// A role tuned for text fields and editors.
     case input
+
+    /// A role tuned for action labels inside buttons.
     case button
 
+    /// The size adjustment applied to the base font size for this role.
     public var sizeOffset: CGFloat {
         switch self {
         case .title:
@@ -29,6 +40,7 @@ public enum DyslexicoTextRole {
         }
     }
     
+    /// The default weight used when neither the global font settings nor the text settings specify one.
     public var defaultWeight: DyslexicoFontWeight {
         switch self {
         case .title:

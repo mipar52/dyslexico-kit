@@ -9,15 +9,30 @@ import Foundation
 import SwiftUI
 import UIKit
 
+/// Highlight colors used to visually distinguish confusing letter pairs.
 public enum DyslexicoHighlightColor: Hashable {
+    /// Default highlight color for the letter "b".
     case highlightB
+
+    /// Default highlight color for the letter "d".
     case highlightD
+
+    /// Default highlight color for the letter "p".
     case highlightP
+
+    /// Default highlight color for the letter "q".
     case highlightQ
+
+    /// Default highlight color for the letter "m".
     case highlightM
+
+    /// Default highlight color for the letter "w".
     case highlightW
+
+    /// A client-defined highlight color expressed with SwiftUI color components.
     case custom(red: Double, green: Double, blue: Double, opacity: Double = 1)
 
+    /// The SwiftUI `Color` representation of the highlight color.
     public var color: Color {
         switch self {
         case .highlightB:
@@ -37,6 +52,7 @@ public enum DyslexicoHighlightColor: Hashable {
         }
     }
 
+    /// The UIKit `UIColor` representation of the highlight color.
     public var uiColor: UIColor {
         UIColor(color)
     }

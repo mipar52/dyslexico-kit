@@ -8,11 +8,21 @@
 import Foundation
 import SwiftUI
 
+/// Letter-pair highlighting rules used by DyslexicoKit attributed text and PDF export.
 public enum DyslexicoLetterHighlightOption: Hashable {
+    /// Highlights the common "b" and "d" confusion pair with default colors.
     case bdPair
+
+    /// Highlights the common "p" and "q" confusion pair with default colors.
     case pqPair
+
+    /// Highlights the common "m" and "w" confusion pair with default colors.
     case mwPair
+
+    /// Highlights a client-defined letter pair using the default custom pair colors.
     case customPair(Character, Character)
+
+    /// Highlights a client-defined letter pair using client-defined colors for each letter.
     case customColoredPair(
         Character,
         Character,
@@ -20,6 +30,7 @@ public enum DyslexicoLetterHighlightOption: Hashable {
         secondColor: DyslexicoHighlightColor
     )
     
+    /// The two highlight colors used for this pair.
     public var pairColor: (DyslexicoHighlightColor, DyslexicoHighlightColor) {
         switch self {
         case .bdPair:
@@ -35,10 +46,12 @@ public enum DyslexicoLetterHighlightOption: Hashable {
         }
     }
     
+    /// Creates a custom letter-pair option using the default custom pair colors.
     public func makePair(for letter: Character, and letterTwo: Character) ->  DyslexicoLetterHighlightOption {
         return .customPair(letter, letterTwo)
     }
 
+    /// Creates a custom letter-pair option with explicit colors for each letter.
     public static func makePair(
         for letter: Character,
         and letterTwo: Character,
