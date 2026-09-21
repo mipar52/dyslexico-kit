@@ -204,6 +204,75 @@ let result = try await DyslexicoPdfGenerator().exportToPdf(
 )
 ```
 
+## Voice and Read Aloud
+
+Use ``DyslexicoSpeechController`` when a client app needs read-aloud controls without managing `AVSpeechSynthesizer` directly:
+
+```swift
+let speech = DyslexicoSpeechController(
+    settings: .init(
+        language: "en-US",
+        rate: 0.46,
+        pitchMultiplier: 1.0,
+        volume: 1.0,
+        prefersPremiumVoice: true
+    )
+)
+
+try speech.speak("Readable text for this user.")
+```
+
+The controller publishes ``DyslexicoSpeechPlaybackState`` and supports pause, resume, and stop:
+
+```swift
+speech.pause()
+speech.resume()
+speech.stop()
+```
+
+For reader-style interfaces, pass ``DyslexicoSpeechSegment`` values and use callbacks to keep the UI focused on the active line or word:
+
+```swift
+let segments = lines.map {
+    DyslexicoSpeechSegment(id: $0.id, text: $0.text)
+}
+
+speech.onSegmentStarted = { segment in
+    focusedLineID = segment.id
+}
+
+speech.onWillSpeakRange = { range, segment in
+    highlightedWordRange = range
+    focusedLineID = segment.id
+}
+
+speech.onQueueFinished = {
+    focusedLineID = nil
+    highlightedWordRange = nil
+}
+
+try speech.speak(segments)
+```
+
+Client apps can list Apple/system voices and store a selected voice identifier:
+
+```swift
+let englishVoices = DyslexicoSpeechController.availableVoices(for: "en-US")
+let selectedVoice = englishVoices.first
+
+let speechSettings = DyslexicoSpeechSettings(
+    language: "en-US",
+    voiceIdentifier: selectedVoice?.identifier,
+    rate: 0.44
+)
+```
+
+If the host app already manages `AVAudioSession`, disable SDK audio-session configuration:
+
+```swift
+let speechSettings = DyslexicoSpeechSettings(configuresAudioSession: false)
+```
+
 ## Topics
 
 ### Typography Settings
@@ -251,3 +320,11 @@ let result = try await DyslexicoPdfGenerator().exportToPdf(
 - ``DyslexicoExportStyle``
 - ``DyslexicoPageSize``
 - ``DyslexicoExportError``
+
+### Voice
+
+- ``DyslexicoSpeechController``
+- ``DyslexicoSpeechSettings``
+- ``DyslexicoSpeechSegment``
+- ``DyslexicoSpeechPlaybackState``
+- ``DyslexicoSpeechError``
