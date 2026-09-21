@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// A multiline text editor that applies DyslexicoKit typography, validation, and readable input chrome.
 public struct DyslexicoTextEditor: View {
     @Environment(\.dyslexicoTypography) private var typography
 
@@ -21,6 +22,17 @@ public struct DyslexicoTextEditor: View {
     @Binding private var text: String
     @FocusState private var isFocused: Bool
 
+    /// Creates a DyslexicoKit text editor.
+    ///
+    /// - Parameters:
+    ///   - title: An optional visible label displayed above the editor.
+    ///   - placeholder: Optional placeholder text shown when the editor is empty.
+    ///   - error: Optional validation text displayed below the editor.
+    ///   - titleTextSettings: Typography used for the title label.
+    ///   - inputTextSettings: Typography used for the editable text.
+    ///   - errorTextSettings: Typography used for validation text.
+    ///   - minHeight: The minimum editor height.
+    ///   - text: The bound text value.
     public init(
         title: LocalizedStringResource? = nil,
         placeholder: LocalizedStringResource? = nil,
@@ -41,6 +53,7 @@ public struct DyslexicoTextEditor: View {
         self._text = text
     }
 
+    /// The rendered SwiftUI view.
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let title {

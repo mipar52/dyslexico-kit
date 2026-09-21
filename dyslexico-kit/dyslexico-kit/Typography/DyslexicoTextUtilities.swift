@@ -8,9 +8,17 @@
 import Foundation
 import SwiftUI
 
+/// Helpers for creating styled attributed text from DyslexicoKit typography settings.
 public struct DyslexicoTextUtilities {
-    /// SwiftUI variant — for use inside SwiftUI views.
-    /// Returns an AttributedString that can be passed to `Text(_:)`.
+    /// Creates a SwiftUI `AttributedString` using DyslexicoKit font, color, spacing, and highlight settings.
+    ///
+    /// Use this when a custom SwiftUI view needs an attributed text value instead of `DyslexicoText`.
+    ///
+    /// - Parameters:
+    ///   - text: The plain text to style.
+    ///   - typography: The typography configuration used to resolve the final attributes.
+    ///   - role: The semantic role used for font sizing and weight.
+    /// - Returns: An attributed string suitable for `Text(_:)` and other SwiftUI attributed text APIs.
     public static func createStyledAttributedString(
         _ text: String,
         with typography: DyslexicoTypographySettings,
@@ -32,13 +40,17 @@ public struct DyslexicoTextUtilities {
         return attributed
     }
     
-    /// UIKit / Core Text variant — for PDF rendering and other UIKit consumers.
-    /// Returns an NSAttributedString with all attributes needed for CTFramesetter.
+    /// Creates a UIKit `NSAttributedString` for PDF rendering, Core Text, and UIKit consumers.
     ///
-    /// `bodyFont`, `textColor`, and `lineSpacing` are passed explicitly because
-    /// PDF rendering needs to express them as concrete UIKit types,
-    /// and the caller may want overrides (e.g. plain style vs dyslexia-friendly).
-    /// public struct DyslexicoPdfUtilties {
+    /// - Parameters:
+    ///   - text: The plain text to style.
+    ///   - bodyFont: The concrete font used for the body text.
+    ///   - textColor: The text color used for the attributed string.
+    ///   - kerning: The character spacing applied to the text.
+    ///   - lineSpacing: The paragraph line spacing applied to the text.
+    ///   - highlightOptions: The letter highlight rules to apply when highlights are enabled.
+    ///   - includeHighlights: Whether highlight background attributes should be added.
+    /// - Returns: An attributed string suitable for UIKit, Core Text, and PDF drawing.
     public static func createStyledNSAttributedString(
         _ text: String,
         bodyFont: UIFont,

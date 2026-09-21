@@ -8,8 +8,21 @@
 import Foundation
 import UIKit
 
+/// Generates PDF documents from plain text pages using standard or DyslexicoKit typography.
 public struct DyslexicoPdfGenerator {
     
+    /// Exports a document to a temporary PDF file and returns both its file URL and in-memory data.
+    ///
+    /// The `dyslexiaFriendly` export style resolves fonts, colors, spacing, and optional letter highlights from
+    /// the supplied `DyslexicoTypographySettings`, so client apps can generate PDFs that match a user's reading
+    /// preferences instead of relying on a single default style.
+    ///
+    /// - Parameters:
+    ///   - document: The document metadata and page text to export.
+    ///   - pdfConfiguration: Export options such as author, page size, style, and letter highlights.
+    ///   - typography: The typography settings used when `pdfConfiguration.style` is `.dyslexiaFriendly`.
+    /// - Returns: A result containing the generated PDF file URL and PDF data.
+    /// - Throws: `DyslexicoExportError.noContentToExport` when all pages are empty, or a file-writing error.
     public func exportToPdf(with document: DyslexicoDocument, pdfConfiguration: DyslexicoPdfConfiguration, typography: DyslexicoTypographySettings) async throws -> DyslexicoPdfDocumentResult {
         let pages = document.pages.filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
         guard !pages.isEmpty else { throw DyslexicoExportError.noContentToExport }

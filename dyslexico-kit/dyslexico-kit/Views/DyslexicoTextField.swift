@@ -7,6 +7,7 @@
 
 import SwiftUI
 
+/// A single-line text input that applies DyslexicoKit typography, spacing, validation, and accessibility defaults.
 public struct DyslexicoTextField: View {
 
     @Environment(\.dyslexicoTypography) private var typography
@@ -32,7 +33,25 @@ public struct DyslexicoTextField: View {
     @FocusState private var isFocused: Bool
     @State private var isPasswordVisible = false
 
-
+    /// Creates a DyslexicoKit text field.
+    ///
+    /// - Parameters:
+    ///   - title: An optional visible label displayed above the field.
+    ///   - placeholder: The prompt shown when the text binding is empty.
+    ///   - systemImage: An optional SF Symbol displayed inside the field.
+    ///   - isSecure: Whether the field should hide entered text by default.
+    ///   - error: Optional validation text displayed below the field.
+    ///   - titleTextSettings: Typography used for the title label.
+    ///   - inputTextSettings: Typography used for the editable text.
+    ///   - errorTextSettings: Typography used for validation text.
+    ///   - keyboardType: The keyboard type requested from UIKit.
+    ///   - textContentType: The semantic content type used for autofill.
+    ///   - autocapitalization: The autocapitalization behavior for entered text.
+    ///   - autocorrectionDisabled: Whether autocorrection should be disabled.
+    ///   - submitLabel: The keyboard return-key label.
+    ///   - showsClearButton: Whether a clear button appears for non-secure text.
+    ///   - onSubmit: Optional callback invoked when the field submits.
+    ///   - text: The bound text value.
     public init(
         title: LocalizedStringResource? = nil,
         placeholder: LocalizedStringResource,
@@ -69,6 +88,7 @@ public struct DyslexicoTextField: View {
         self._text = text
     }
 
+    /// The rendered SwiftUI view.
     public var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             if let title {

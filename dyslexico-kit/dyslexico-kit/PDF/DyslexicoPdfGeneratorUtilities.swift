@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 
+/// PDF drawing helpers used by `DyslexicoPdfGenerator`.
 public struct DyslexicoPdfGeneratorUtilities {
     static func paintBackground(style: ResolvedStyle, pageSize: CGSize, in context: CGContext) {
         guard let backgroundColor = style.backgroundColor else { return }

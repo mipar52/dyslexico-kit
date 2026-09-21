@@ -7,12 +7,19 @@
 
 import SwiftUI
 
+/// Visual styles available for `DyslexicoButton`.
 public enum DyslexicoButtonVariant {
+    /// A filled primary action button.
     case primary
+
+    /// A lighter secondary action button with a border.
     case secondary
+
+    /// A destructive action button for dangerous operations.
     case destructive
 }
 
+/// A full-width SwiftUI button styled with DyslexicoKit typography and colors.
 public struct DyslexicoButton: View {
     @Environment(\.isEnabled) private var isEnabled
     @Environment(\.dyslexicoTypography) private var typography
@@ -23,6 +30,14 @@ public struct DyslexicoButton: View {
     private let textSettings: DyslexicoTextSettings
     private let action: () -> Void
 
+    /// Creates a DyslexicoKit button.
+    ///
+    /// - Parameters:
+    ///   - title: The localized button title.
+    ///   - systemImage: An optional SF Symbol shown before the title.
+    ///   - variant: The visual style used for the button.
+    ///   - textSettings: Role and overrides used to resolve the button title typography.
+    ///   - action: The action performed when the button is tapped.
     public init(
         _ title: LocalizedStringResource,
         systemImage: String? = nil,
@@ -37,6 +52,7 @@ public struct DyslexicoButton: View {
         self.action = action
     }
 
+    /// The rendered SwiftUI view.
     public var body: some View {
         Button(action: action) {
             HStack(spacing: 8) {

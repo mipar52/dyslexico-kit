@@ -9,10 +9,24 @@ import Foundation
 import SwiftUI
 import UIKit
 
+/// Background colors chosen to reduce visual strain behind readable text.
 public enum BackgroundColor {
-    case cream, sepia, pastel, dark
+    /// A soft cream reading background.
+    case cream
+
+    /// A warm sepia reading background.
+    case sepia
+
+    /// A gentle pastel reading background.
+    case pastel
+
+    /// A dark reading background for low-light contexts.
+    case dark
+
+    /// A client-defined background color expressed with SwiftUI color components.
     case custom(red: Double, green: Double, blue: Double, opacity: Double = 1)
     
+    /// The SwiftUI `Color` representation of the background color.
     public var color: Color {
         switch self {
         case .cream:
@@ -28,6 +42,7 @@ public enum BackgroundColor {
         }
     }
     
+    /// The UIKit `UIColor` representation of the background color.
     public var uiColor: UIColor {
         switch self {
         case .cream:

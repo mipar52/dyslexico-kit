@@ -7,16 +7,36 @@
 
 import SwiftUI
 
+/// Font weights DyslexicoKit can resolve for bundled, system, and custom fonts.
 public enum DyslexicoFontWeight: String, CaseIterable {
+    /// Black font weight.
     case black = "Black"
+
+    /// Bold font weight.
     case bold = "Bold"
+
+    /// Bold italic font variant.
     case boldItalic = "BoldItalic"
+
+    /// Extra bold font weight.
     case extraBold = "ExtraBold"
+
+    /// Italic font variant.
     case italic = "Italic"
+
+    /// Light font weight.
     case light = "Light"
+
+    /// Medium font weight.
     case medium = "Medium"
+
+    /// Regular font weight.
     case regular = "Regular"
+
+    /// Semi-bold font weight.
     case semiBold = "SemiBold"
+
+    /// Thin font weight.
     case thin = "Thin"
 }
 
