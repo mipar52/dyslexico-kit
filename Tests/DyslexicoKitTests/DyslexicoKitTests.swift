@@ -8,9 +8,9 @@
 import Testing
 import SwiftUI
 import UIKit
-@testable import dyslexico_kit
+@testable import DyslexicoKit
 
-struct dyslexico_kitTests {
+struct DyslexicoKitTests {
 
     @Test func customLetterColorResolvesToUIColorComponents() throws {
         let color = LetterColor.custom(red: 0.12, green: 0.34, blue: 0.56, opacity: 0.78)

@@ -1,4 +1,4 @@
-# ``dyslexico_kit``
+# ``DyslexicoKit``
 
 Build readable SwiftUI interfaces with dyslexia-friendly typography, spacing, colors, and input components.
 
