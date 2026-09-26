@@ -160,12 +160,20 @@ extension DyslexicoSpeechController {
             try session.setCategory(
                 .playback,
                 mode: .spokenAudio,
-                policy: .longFormAudio,
-                options: [.allowAirPlay]
+                options: []
             )
             try session.setActive(true)
         } catch {
-            throw DyslexicoSpeechError.audioSessionConfigurationFailed(error)
+            do {
+                try session.setCategory(
+                    .playback,
+                    mode: .default,
+                    options: []
+                )
+                try session.setActive(true)
+            } catch {
+                throw DyslexicoSpeechError.audioSessionConfigurationFailed(error)
+            }
         }
     }
     
