@@ -3,8 +3,13 @@
   <h1>DyslexicoKit</h1>
 </div>
 
+DyslexicoKit is a Swift Package for building dyslexia-friendly reading experiences on iOS. It gives client apps a shared way to resolve readable typography, colors, spacing, letter highlights, SwiftUI views, view modifiers, attributed strings, PDF export, and text-to-speech support from one set of reader preferences.
+
+DyslexicoKit was created as part of a computer science thesis on adapting digital and scanned text for readers with dyslexia. It is intended as an integration toolkit, not a diagnostic tool. Because reading preferences differ between users, the SDK is built around configurable settings instead of a single fixed "dyslexic" preset.
+
 ## Table of Contents
 
+- [Research Background](#research-background)
 - [Typography Settings](#typography-settings)
 - [Custom Colors and Highlights](#custom-colors-and-highlights)
 - [SwiftUI Integration](#swiftui-integration)
@@ -16,6 +21,39 @@
 - [Attributed Strings](#attributed-strings)
 - [PDF Generation](#pdf-generation)
 - [Voice and Read Aloud](#voice-and-read-aloud)
+
+## Research Background
+
+DyslexicoKit is informed by research on dyslexia, readable visual design, assistive technology, document processing, and text-to-speech workflows. These references are useful for client teams that want to understand why the SDK exposes customizable typography, color pairs, highlighting, PDF, and voice settings instead of enforcing one universal reading configuration.
+
+### Dyslexia, reading, and typography
+
+- Lenček, Blaži, and Ivšac, [Specifične teškoće učenja: osvrt na probleme u jeziku, čitanju i pisanju](https://hrcak.srce.hr/21162)
+- Döhla and Heim, [Developmental Dyslexia and Dysgraphia: What Can We Learn from the One About the Other?](https://doi.org/10.3389/fpsyg.2015.02045)
+- Lenček, [Procjena disleksije u hrvatskome: neke značajke čitanja i pisanja odraslih](https://hrcak.srce.hr/79016)
+- Čagalj, Šimleša, and Ivšac Pavliša, [Utjecaj fonta na čitanje osoba s disleksijom](https://doi.org/10.31299/log.6.1.1)
+- Beacham and Alty, [An investigation into the effects that digital media can have on the learning outcomes of individuals who have dyslexia](https://doi.org/10.1016/j.compedu.2004.10.006)
+- Yoliando, [A Comparative Study of Dyslexia Style Guides in Improving Readability for People with Dyslexia](https://doi.org/10.2991/assehr.k.201202.050)
+- Elma, Rachmawanti, and Machfiroh, [Visual Design Elements for Dyslexia-Friendly Reading Materials: A Systematic Literature Review](https://doi.org/10.35445/alishlah.v18i2.9416)
+- Miniukovich, De Angeli, Sulpizio, and Venuti, [Design Guidelines for Web Readability](https://doi.org/10.1145/3064663.3064711)
+
+### Assistive technology and dyslexia applications
+
+- Jing and Chen, [A Research Review: How Technology Helps to Improve the Learning Process of Learners with Dyslexia](https://doi.org/10.33736/jcshd.510.2017)
+- Politi-Georgousi and Drigas, [Mobile Applications, An Emerging Powerful Tool for Dyslexia Screening and Intervention: A Systematic Literature Review](https://doi.org/10.3991/ijim.v14i18.15315)
+- Madeira, Silva, Marcelino, and Ferreira, [Assistive Mobile Applications for Dyslexia](https://doi.org/10.1016/j.procs.2015.08.535)
+- Gupta, Aflatoony, and Leonard, [Augmenta11y: Design for Dyslexia](https://doi.org/10.1145/3441852.3476530)
+- Rello and Baeza-Yates, [Evaluation of DysWebxia: A Reading App Designed for People with Dyslexia](https://doi.org/10.1145/2596695.2596697)
+- Rello, Kanvinde, and Baeza-Yates, [A Mobile Application for Displaying More Accessible eBooks for People with Dyslexia](https://doi.org/10.1016/j.procs.2012.10.026)
+- Austin and Holloway, [Assistive Technology (AT), for What?](https://doi.org/10.3390/soc12060169)
+- Svensson, Nordström, Lindeblad, Gustafson, Björn, Sand, Almgren/Bäck, and Nilsson, [Effects of Assistive Technology for Students with Reading and Writing Disabilities](https://www.tandfonline.com/doi/full/10.1080/17483107.2019.1646821)
+- Lerga, Čandrlić, and Jakupović, [A Review on Assistive Technologies for Students with Dyslexia](https://doi.org/10.5220/0010434500640072)
+- Paudel, Karki, Kafle, Poudel, and Neupane, [A comprehensive review of assistive technologies for children with dyslexia](https://arxiv.org/abs/2412.13241)
+
+### Document processing and implementation context
+
+- Hamad and Kaya, [A Detailed Analysis of Optical Character Recognition Technology](https://doi.org/10.18100/ijamec.270374)
+- Zhou, Feng, Jiang, and Liao, [DeclarUI: Supporting Basic Mobile UI Tasks with Declarative UI and Large Language Models](https://arxiv.org/abs/2409.11667)
 
 ## Typography Settings
 
