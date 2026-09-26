@@ -16,6 +16,9 @@ struct TypographyScreen: View {
     @State private var includeBDPair = true
     @State private var includePQPair = true
     @State private var includeMWPair = false
+    
+    @State private var letterColor: DemoLetterColor = .black
+    @State private var backgroundColor: DemoBackgroundColor = .cream
 
     var body: some View {
         SampleScreenContainer {
@@ -44,6 +47,20 @@ struct TypographyScreen: View {
             DemoSlider(title: "Font size", value: $fontSize, range: 16...34, step: 1, suffix: "pt")
             DemoSlider(title: "Line spacing", value: $lineSpacing, range: 0...14, step: 1, suffix: "pt")
             DemoSlider(title: "Letter spacing", value: $letterSpacing, range: 0...3, step: 0.1, suffix: "pt")
+            
+            Picker("Letter color", selection: $letterColor) {
+                ForEach(DemoLetterColor.allCases) { letterColor in
+                    Text(letterColor.title).tag(letterColor)
+                }
+            }
+            .pickerStyle(.segmented)
+            
+            Picker("Background color", selection: $backgroundColor) {
+                ForEach(DemoBackgroundColor.allCases) { backgroundColor in
+                    Text(backgroundColor.title).tag(backgroundColor)
+                }
+            }
+            .pickerStyle(.segmented)
 
             Toggle("Highlight b/d", isOn: $includeBDPair)
             Toggle("Highlight p/q", isOn: $includePQPair)
@@ -59,8 +76,8 @@ struct TypographyScreen: View {
             ),
             fontHighlightOptions: highlightOptions,
             colorSettings: .init(
-                fontColor: .charcoal,
-                backgroundColor: .cream
+                fontColor: letterColor.color,
+                backgroundColor: backgroundColor.color
             ),
             spacingSettings: .init(
                 lineSpacing: lineSpacing,

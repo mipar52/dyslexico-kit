@@ -50,6 +50,55 @@ enum DemoFontFamily: String, CaseIterable, Identifiable {
     }
 }
 
+enum DemoLetterColor: String, CaseIterable, Identifiable {
+    case black, brown, navy, charcoal, error
+
+    var id: String { rawValue }
+
+    var title: String {
+        return self.rawValue.uppercased()
+    }
+
+    var color: LetterColor {
+        switch self {
+        case .black:
+                .black
+        case .brown:
+                .brown
+        case .navy:
+                .navy
+        case .charcoal:
+                .charcoal
+        case .error:
+                .error
+        }
+    }
+}
+
+enum DemoBackgroundColor: String, CaseIterable, Identifiable {
+    case cream, sepia, pastel, dark
+
+    var id: String { rawValue }
+
+    var title: String {
+        return self.rawValue.uppercased()
+    }
+
+    var color: BackgroundColor {
+        switch self {
+        case .cream:
+                .cream
+        case .sepia:
+                .sepia
+        case .pastel:
+                .pastel
+        case .dark:
+                .dark
+        }
+    }
+}
+
+
 extension DyslexicoSpeechPlaybackState {
     var sampleTitle: String {
         switch self {
