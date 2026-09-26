@@ -10,15 +10,20 @@ DyslexicoKit was created as part of a computer science thesis on adapting digita
 ## Table of Contents
 
 - [Research Background](#research-background)
-- [Typography Settings](#typography-settings)
-- [Custom Colors and Highlights](#custom-colors-and-highlights)
-- [SwiftUI Integration](#swiftui-integration)
-- [Text Views](#text-views)
-- [Text Fields](#text-fields)
-- [Text Editors](#text-editors)
-- [Buttons and Labels](#buttons-and-labels)
-- [View Modifiers](#view-modifiers)
-- [Attributed Strings](#attributed-strings)
+- [Quick Start](#quick-start)
+    - [Integration](#integration)
+    - [Sample App Testing](#sample-app-testing)
+- [Typography](#typography)
+    - [Typography Settings](#typography-settings)
+    - [Custom Colors and Highlights](#custom-colors-and-highlights)
+- [Custom Views](#custom-views)
+    - [SwiftUI Integration](#swiftui-integration)
+    - [Text Views](#text-views)
+    - [Text Fields](#text-fields)
+    - [Text Editors](#text-editors)
+    - [Buttons and Labels](#buttons-and-labels)
+    - [View Modifiers](#view-modifiers)
+    - [Attributed Strings](#attributed-strings)
 - [PDF Generation](#pdf-generation)
 - [Voice and Read Aloud](#voice-and-read-aloud)
 
@@ -55,7 +60,70 @@ DyslexicoKit is informed by research on dyslexia, readable visual design, assist
 - Hamad and Kaya, [A Detailed Analysis of Optical Character Recognition Technology](https://doi.org/10.18100/ijamec.270374)
 - Zhou, Feng, Jiang, and Liao, [DeclarUI: Supporting Basic Mobile UI Tasks with Declarative UI and Large Language Models](https://arxiv.org/abs/2409.11667)
 
-## Typography Settings
+## Quick Start
+
+Use DyslexicoKit as a Swift Package dependency in any iOS app that needs reader-configurable typography, reusable accessible text controls, PDF generation, or read-aloud support. The SDK targets iOS 16 and can be adopted gradually: start with the environment-based typography settings, then move individual screens to the custom views or modifiers when needed.
+
+### Integration
+
+1. In Xcode, open your app project and choose **File > Add Package Dependencies**.
+2. Add the package URL:
+
+```text
+https://github.com/mipar52/dyslexico-ios-sdk.git
+```
+
+3. Select the `DyslexicoKit` library product and add it to your app target.
+4. Import the SDK where you want to use it:
+
+```swift
+import DyslexicoKit
+```
+
+Set the typography settings once near the root of your SwiftUI hierarchy:
+
+```swift
+@main
+struct ReadingApp: App {
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .dyslexicoTypography(.defaultSettings)
+        }
+    }
+}
+```
+
+Then use DyslexicoKit views or modifiers inside the app:
+
+```swift
+DyslexicoText("Readable text", textSettings: .body)
+
+Text("Native SwiftUI text")
+    .dyslexicoText(role: .body)
+```
+
+### Sample App Testing
+
+The repository includes a sample app that demonstrates the SDK by feature area: typography, views, PDF generation, and voice playback.
+
+1. Open the sample project:
+
+```text
+sample-app/sample-app.xcodeproj
+```
+
+2. Select the `sample-app` scheme.
+3. Choose an iOS simulator or a connected iOS device.
+4. Build and run the app from Xcode.
+
+The sample app uses the local package checkout, so changes made in `Sources/DyslexicoKit` can be tested immediately from the sample screens.
+
+## Typography
+
+The typography layer is the foundation of DyslexicoKit. It centralizes the reader's font family, base size, text role sizing, weights, colors, spacing, and letter highlighting so client apps can keep every screen consistent while still allowing each user to customize their reading experience.
+
+### Typography Settings
 
 Use `DyslexicoTypographySettings` as the main typography entry point when integrating the SDK. It stores the user's global reading preferences, such as font family, base size, colors, spacing, highlighting, and italic preference.
 
@@ -107,7 +175,7 @@ label.font = settings.uiFont(for: DyslexicoTextRole.body)
 label.textColor = settings.uiColor(for: DyslexicoTextSettings.body)
 ```
 
-## Custom Colors and Highlights
+### Custom Colors and Highlights
 
 Client apps can store custom text and background colors directly in `DyslexicoColorSettings`:
 
@@ -143,7 +211,11 @@ let settings = DyslexicoTypographySettings(
 )
 ```
 
-## SwiftUI Integration
+## Custom Views
+
+The views layer is optional but useful when client apps want accessible, dyslexia-friendly UI components without rebuilding the same styling and interaction states. Use the prebuilt SwiftUI controls for common text, input, button, and label flows, or apply the view modifiers to native SwiftUI views when an existing design system needs to stay in place.
+
+### SwiftUI Integration
 
 Set typography once near the root of your SwiftUI view hierarchy:
 
@@ -154,7 +226,7 @@ ContentView()
 
 All DyslexicoKit views and text modifiers below that point will read the same settings from the SwiftUI environment.
 
-## Text Views
+### Text Views
 
 Use `DyslexicoText` when you want text that automatically follows the active DyslexicoKit typography settings:
 
@@ -178,7 +250,7 @@ DyslexicoText(
 )
 ```
 
-## Text Fields
+### Text Fields
 
 Use `DyslexicoTextField` for accessible text input styled with the active typography settings:
 
@@ -224,7 +296,7 @@ DyslexicoTextField(
 )
 ```
 
-## Text Editors
+### Text Editors
 
 Use `DyslexicoTextEditor` for multiline editable text:
 
@@ -253,7 +325,7 @@ DyslexicoTextEditor(
 )
 ```
 
-## Buttons and Labels
+### Buttons and Labels
 
 Use `DyslexicoButton` for actions that follow the `.button` typography role:
 
@@ -276,7 +348,7 @@ Use `DyslexicoLabel` for icon and text rows:
 DyslexicoLabel("Reading mode", systemImage: "textformat")
 ```
 
-## View Modifiers
+### View Modifiers
 
 If you do not want to use DyslexicoKit views, apply the typography system to your own SwiftUI views:
 
@@ -313,7 +385,7 @@ Text("Long readable paragraph")
     .dyslexicoTextLayout(.wrap(lines: nil))
 ```
 
-## Attributed Strings
+### Attributed Strings
 
 If you need highlighted text inside your own SwiftUI view, use `DyslexicoTextUtilities` to build an `AttributedString` from the same typography settings:
 
