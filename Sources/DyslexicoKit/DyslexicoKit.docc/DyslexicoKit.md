@@ -13,6 +13,8 @@ ContentView()
 
 Use ``DyslexicoText`` for display text, ``DyslexicoTextField`` for single-line input, and ``DyslexicoTextEditor`` for multiline input. If you prefer to keep your own views, apply the SDK typography with the `dyslexicoText(_:)`, `dyslexicoText(role:)`, `dyslexicoInputChrome(isFocused:hasError:)`, and `dyslexicoReadableBackground()` view modifiers.
 
+The sample app demonstrates several integration scopes: app-wide typography from a global settings screen, local typography for a live preview, PDF-specific typography that starts from the app settings, and a voice read-along preview that highlights the currently spoken word.
+
 ## Configure Typography
 
 ``DyslexicoTypographySettings`` stores the user's global reading preferences:
@@ -21,6 +23,8 @@ Use ``DyslexicoText`` for display text, ``DyslexicoTextField`` for single-line i
 - Text and background colors through ``DyslexicoColorSettings``
 - Letter and line spacing through ``DyslexicoSpacingSettings``
 - Optional letter-pair highlighting through ``DyslexicoLetterHighlightOption``
+
+Bundled DyslexicoKit fonts are registered automatically when fonts are resolved, so client apps can use the provided font families without adding extra app-level font registration.
 
 Text-specific rendering is described with ``DyslexicoTextSettings``. It combines a semantic ``DyslexicoTextRole`` with optional overrides:
 
@@ -36,6 +40,16 @@ DyslexicoText("Welcome", textSettings: titleSettings)
 ```
 
 When resolving text, the SDK prefers text-specific overrides, then global typography settings, then defaults from the selected role.
+
+You can also scope typography to one subtree instead of the entire app. This is useful for previews, PDF settings panels, and comparison screens:
+
+```swift
+VStack(alignment: .leading) {
+    DyslexicoText("Preview", textSettings: .title)
+    DyslexicoText("Only this preview uses previewTypography.", textSettings: .body)
+}
+.dyslexicoTypography(previewTypography)
+```
 
 ### Custom Colors and Highlights
 
@@ -71,7 +85,7 @@ let typography = DyslexicoTypographySettings(
 
 ## SwiftUI Views
 
-Use ``DyslexicoText`` for display text:
+Use ``DyslexicoText`` for display text. It renders through the SDK's attributed text pipeline, so configured letter highlights are visible in SwiftUI text:
 
 ```swift
 DyslexicoText("Readable body text", textSettings: .body)
@@ -204,6 +218,18 @@ let result = try await DyslexicoPdfGenerator().exportToPdf(
 )
 ```
 
+PDF generation can use a different typography configuration from the live app UI. A common flow is to seed PDF settings from the reader's global typography, allow PDF-specific adjustments, and pass that configuration to the generator:
+
+```swift
+var pdfTypography = userTypographySettings
+
+let result = try await DyslexicoPdfGenerator().exportToPdf(
+    with: document,
+    pdfConfiguration: configuration,
+    typography: pdfTypography
+)
+```
+
 ## Voice and Read Aloud
 
 Use ``DyslexicoSpeechController`` when a client app needs read-aloud controls without managing `AVSpeechSynthesizer` directly:
@@ -252,6 +278,25 @@ speech.onQueueFinished = {
 }
 
 try speech.speak(segments)
+```
+
+For read-along interfaces, use ``DyslexicoSpeechController/currentSpeechRange`` or `onWillSpeakRange` to highlight the word currently being spoken:
+
+```swift
+var attributed = DyslexicoTextUtilities.createStyledAttributedString(
+    text,
+    with: typography,
+    role: .body
+)
+
+if let range = speech.currentSpeechRange,
+   let stringRange = Range(range, in: text),
+   let lowerBound = AttributedString.Index(stringRange.lowerBound, within: attributed),
+   let upperBound = AttributedString.Index(stringRange.upperBound, within: attributed) {
+    attributed[lowerBound..<upperBound].backgroundColor = .yellow
+}
+
+Text(attributed)
 ```
 
 Client apps can list Apple/system voices and store a selected voice identifier:

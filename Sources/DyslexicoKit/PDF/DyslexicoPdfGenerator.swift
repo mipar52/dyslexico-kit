@@ -11,6 +11,8 @@ import UIKit
 /// Generates PDF documents from plain text pages using standard or DyslexicoKit typography.
 public struct DyslexicoPdfGenerator {
     
+    public init() {}
+    
     /// Exports a document to a temporary PDF file and returns both its file URL and in-memory data.
     ///
     /// The `dyslexiaFriendly` export style resolves fonts, colors, spacing, and optional letter highlights from

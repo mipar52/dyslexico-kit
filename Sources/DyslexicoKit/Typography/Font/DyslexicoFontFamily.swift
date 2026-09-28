@@ -9,6 +9,7 @@ import SwiftUI
 
 /// Font families supported by DyslexicoKit typography settings.
 public enum DyslexicoFontFamily {
+    
     /// Uses the bundled OpenDyslexic font family.
     case openDyslexic
 
