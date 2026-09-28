@@ -10,6 +10,8 @@ import DyslexicoKit
 
 @MainActor
 struct VoiceScreen: View {
+    @Environment(\.dyslexicoTypography) private var typography
+
     @StateObject private var speechController = DyslexicoSpeechController()
     @State private var speechText = SampleText.note
     @State private var rate = 0.46
@@ -24,6 +26,14 @@ struct VoiceScreen: View {
                     minHeight: 180,
                     text: $speechText
                 )
+            }
+
+            DemoSection(title: "Read Along", systemImage: "highlighter") {
+                Text(highlightedSpeechText)
+                    .lineSpacing(typography.spacingSettings.lineSpacing)
+                    .dyslexicoTextLayout(.wrap(lines: nil))
+                    .accessibilityLabel(speechText)
+                    .animation(.easeOut(duration: 0.12), value: speechController.currentSpeechRange?.location)
             }
 
             DemoSection(title: "Playback", systemImage: "speaker.wave.2") {
@@ -44,7 +54,6 @@ struct VoiceScreen: View {
                 }
             }
         }
-        .dyslexicoTypography(.defaultSettings)
         .dyslexicoReadableBackground()
         .navigationTitle("Voice")
     }
@@ -64,6 +73,26 @@ struct VoiceScreen: View {
         } catch {
             statusMessage = error.localizedDescription
         }
+    }
+
+    private var highlightedSpeechText: AttributedString {
+        var attributed = DyslexicoTextUtilities.createStyledAttributedString(
+            speechText,
+            with: typography,
+            role: .body
+        )
+
+        guard let currentSpeechRange = speechController.currentSpeechRange,
+              let stringRange = Range(currentSpeechRange, in: speechText),
+              let lowerBound = AttributedString.Index(stringRange.lowerBound, within: attributed),
+              let upperBound = AttributedString.Index(stringRange.upperBound, within: attributed)
+        else {
+            return attributed
+        }
+
+        attributed[lowerBound..<upperBound].backgroundColor = Color(red: 1.0, green: 0.86, blue: 0.34)
+        attributed[lowerBound..<upperBound].foregroundColor = Color(red: 0.11, green: 0.13, blue: 0.16)
+        return attributed
     }
 }
 
