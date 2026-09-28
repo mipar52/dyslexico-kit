@@ -17,6 +17,16 @@ private enum NavPath: Hashable {
 
 struct ContentView: View {
     @State private var navigationPath: [NavPath] = []
+    @State private var showsGeneralTypographySettings = false
+    @State private var selectedFontFamily: DemoFontFamily = .atkinsonHyperlegible
+    @State private var fontSize = 22.0
+    @State private var lineSpacing = 6.0
+    @State private var letterSpacing = 1.2
+    @State private var includeBDPair = true
+    @State private var includePQPair = true
+    @State private var includeMWPair = false
+    @State private var letterColor: DemoLetterColor = .black
+    @State private var backgroundColor: DemoBackgroundColor = .cream
 
     var body: some View {
         NavigationStack(path: $navigationPath) {
@@ -27,9 +37,18 @@ struct ContentView: View {
                 }
                 .padding(20)
             }
-            .dyslexicoTypography(.defaultSettings)
             .dyslexicoReadableBackground()
             .navigationTitle("DyslexicoKit")
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showsGeneralTypographySettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                    .accessibilityLabel("General typography settings")
+                }
+            }
             .navigationDestination(for: NavPath.self) { path in
                 switch path {
                 case .typography:
@@ -42,6 +61,23 @@ struct ContentView: View {
                     VoiceScreen()
                 }
             }
+        }
+        .dyslexicoTypography(globalTypography)
+        .sheet(isPresented: $showsGeneralTypographySettings) {
+            NavigationStack {
+                GeneralTypographySettingsScreen(
+                    selectedFontFamily: $selectedFontFamily,
+                    fontSize: $fontSize,
+                    lineSpacing: $lineSpacing,
+                    letterSpacing: $letterSpacing,
+                    includeBDPair: $includeBDPair,
+                    includePQPair: $includePQPair,
+                    includeMWPair: $includeMWPair,
+                    letterColor: $letterColor,
+                    backgroundColor: $backgroundColor
+                )
+            }
+            .dyslexicoTypography(globalTypography)
         }
     }
 
@@ -97,6 +133,42 @@ struct ContentView: View {
                 navigationPath.append(.voice)
             }
         }
+    }
+
+    private var globalTypography: DyslexicoTypographySettings {
+        DyslexicoTypographySettings(
+            fontSettings: .init(
+                family: selectedFontFamily.fontFamily,
+                size: fontSize
+            ),
+            fontHighlightOptions: globalHighlightOptions,
+            colorSettings: .init(
+                fontColor: letterColor.color,
+                backgroundColor: backgroundColor.color
+            ),
+            spacingSettings: .init(
+                lineSpacing: lineSpacing,
+                letterSpacing: letterSpacing
+            )
+        )
+    }
+
+    private var globalHighlightOptions: Set<DyslexicoLetterHighlightOption> {
+        var options: Set<DyslexicoLetterHighlightOption> = []
+
+        if includeBDPair {
+            options.insert(.bdPair)
+        }
+
+        if includePQPair {
+            options.insert(.pqPair)
+        }
+
+        if includeMWPair {
+            options.insert(.mwPair)
+        }
+
+        return options
     }
 }
 
