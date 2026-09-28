@@ -22,17 +22,35 @@ struct TypographyScreen: View {
 
     var body: some View {
         SampleScreenContainer {
-            DemoSection(title: "Live Preview", systemImage: "textformat") {
-                DyslexicoText("DyslexicoKit", textSettings: .title)
-                DyslexicoText(SampleText.preview, textSettings: .body, layout: .wrap(lines: nil))
-                DyslexicoText("Big dogs and quick puzzles make good preview words.", layout: .wrap(lines: nil))
-            }
-
+            previewSection
             settingsSection
         }
-        .background(typography.colorSettings.backgroundColor.color)
-        .dyslexicoTypography(typography)
         .navigationTitle("Typography")
+    }
+
+    private var previewSection: some View {
+        DemoSection(title: "Live Preview", systemImage: "textformat") {
+            VStack(alignment: .leading, spacing: 12) {
+                DyslexicoText("DyslexicoKit", textSettings: .title)
+
+                DyslexicoText(
+                    SampleText.preview,
+                    textSettings: .body,
+                    layout: .wrap(lines: nil)
+                )
+
+                DyslexicoText(
+                    "Big dogs and quick puzzles make good preview words.",
+                    textSettings: .caption,
+                    layout: .wrap(lines: nil)
+                )
+            }
+            .padding(12)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .background(typography.colorSettings.backgroundColor.color)
+            .clipShape(RoundedRectangle(cornerRadius: 8))
+            .dyslexicoTypography(typography)
+        }
     }
 
     private var settingsSection: some View {
