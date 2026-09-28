@@ -24,16 +24,34 @@ public struct DyslexicoTextUtilities {
         with typography: DyslexicoTypographySettings,
         role: DyslexicoTextRole = .body
     ) -> AttributedString {
+        createStyledAttributedString(
+            text,
+            with: typography,
+            textSettings: DyslexicoTextSettings(role: role)
+        )
+    }
+
+    /// Creates a SwiftUI `AttributedString` using DyslexicoKit font, color, spacing, and highlight settings.
+    ///
+    /// Use this overload when a custom SwiftUI view needs the same role-specific styling and overrides
+    /// that `DyslexicoText` uses.
+    ///
+    /// - Parameters:
+    ///   - text: The plain text to style.
+    ///   - typography: The typography configuration used to resolve the final attributes.
+    ///   - textSettings: The semantic role and optional per-text overrides used for styling.
+    /// - Returns: An attributed string suitable for `Text(_:)` and other SwiftUI attributed text APIs.
+    public static func createStyledAttributedString(
+        _ text: String,
+        with typography: DyslexicoTypographySettings,
+        textSettings: DyslexicoTextSettings
+    ) -> AttributedString {
         var attributed = AttributedString(text)
-        attributed.font = typography.font(for: role)
-//        attributed.font = preferences.selectedFont.font(
-//            size: preferences.fontSize,
-//            type: type
-//        )
-        attributed.foregroundColor = typography.colorSettings.fontColor.color
+        attributed.font = typography.font(for: textSettings)
+        attributed.foregroundColor = typography.color(for: textSettings)
 
         if typography.spacingSettings.letterSpacing > 0 {
-            attributed.kern = typography.spacingSettings.letterSpacing // 1.5
+            attributed.kern = typography.spacingSettings.letterSpacing
         }
 
         DyslexicoHighlightUtilities.applyHighlights(to: &attributed, options: typography.fontHighlightOptions)

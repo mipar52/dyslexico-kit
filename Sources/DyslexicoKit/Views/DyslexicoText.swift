@@ -11,7 +11,7 @@ import SwiftUI
 public struct DyslexicoText: View {
     @Environment(\.dyslexicoTypography) private var typography
 
-    private let text: Text
+    private let text: String
     private let accessibilityLabel: String
     
     private let textSettings: DyslexicoTextSettings
@@ -33,7 +33,7 @@ public struct DyslexicoText: View {
         layout: DyslexicoTextLayout = .wrap(lines: nil),
         alignment: TextAlignment = .leading
     ) {
-        self.text = Text(text)
+        self.text = text
         self.accessibilityLabel = accessibilityLabel ?? text
         self.textSettings = textSettings
         self.layout = layout
@@ -55,8 +55,10 @@ public struct DyslexicoText: View {
         layout: DyslexicoTextLayout = .wrap(lines: nil),
         alignment: TextAlignment = .leading
     ) {
-        self.text = Text(text)
-        self.accessibilityLabel = accessibilityLabel ?? String(localized: text)
+        let localizedText = String(localized: text)
+
+        self.text = localizedText
+        self.accessibilityLabel = accessibilityLabel ?? localizedText
         self.textSettings = textSettings
         self.layout = layout
         self.alignment = alignment
@@ -64,14 +66,19 @@ public struct DyslexicoText: View {
     
     /// The rendered SwiftUI view.
     public var body: some View {
-        text
-            .font(typography.font(for: textSettings))
-            .foregroundStyle(typography.color(for: textSettings))
-            .tracking(typography.spacingSettings.letterSpacing)
+        Text(attributedText)
             .lineSpacing(typography.spacingSettings.lineSpacing)
             .multilineTextAlignment(alignment)
             .applyDyslexicoTextLayout(layout)
             .accessibilityLabel(accessibilityLabel)
+    }
+
+    private var attributedText: AttributedString {
+        DyslexicoTextUtilities.createStyledAttributedString(
+            text,
+            with: typography,
+            textSettings: textSettings
+        )
     }
 }
 
